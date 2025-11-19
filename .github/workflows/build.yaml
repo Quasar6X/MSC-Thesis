@@ -5,6 +5,15 @@ on:
     tags:
       - '*'
   workflow_dispatch:
+    inputs:
+      disable_docker_cache:
+        type: boolean
+        description: Forces docker image rebuild
+        default: false
+      skip_release:
+        type: boolean
+        description: Do not create a release from this run
+        default: false
 
 jobs:
   build-latex:
@@ -16,6 +25,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Cache Docker Image
+        uses: ScribeMD/docker-cache@0.5.0
+        if: ${{ ! github.event.inputs.disable_docker_cache }}
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles('.devcontainer/Dockerfile') }}
 
       - name: Build image
         run: |
@@ -34,6 +49,7 @@ jobs:
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
+        if: ${{ ! github.event.inputs.skip_release }}
         with:
           name: Release ${{ github.ref_name }}
           generate_release_notes: true
