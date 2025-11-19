@@ -1,0 +1,16 @@
+{
+    "name": "TeX Live base",
+    "dockerFile": "Dockerfile",
+    "containerUser": "ubuntu",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "exiasr.hadolint",
+                "james-yu.latex-workshop",
+                "ms-azuretools.vscode-containers",
+                "ms-vscode.makefile-tools",
+                "timonwong.shellcheck"
+            ]
+        }
+    }
+}

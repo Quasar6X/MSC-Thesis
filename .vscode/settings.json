@@ -1,0 +1,33 @@
+{
+    "[latex]": {
+        "editor.defaultFormatter": "James-Yu.latex-workshop",
+        "editor.formatOnSave": true,
+    },
+    "latex-workshop.formatting.latex": "latexindent",
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.autoClean.run": "onBuilt",
+    "latex-workshop.latex.recipe.default": "latexmk",
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk",
+            "tools": [
+                "latexmk"
+            ]
+        },
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-r",
+                "%WORKSPACE_FOLDER%/.latexmkrc",
+                "-synctex=1",
+                "-file-line-error",
+                "-cd-"
+            ],
+            "env": {}
+        },
+    ],
+    "makefile.configureOnOpen": false
+}
