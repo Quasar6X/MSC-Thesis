@@ -1,0 +1,39 @@
+name: Build Document
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-latex:
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build container image
+        run: |
+          docker build \
+            -f .devcontainer/Dockerfile \
+            -t thesis-builder:ci \
+            .
+
+      - name: Run latexmk inside container
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/workspace \
+            -w /workspace \
+            thesis-builder:ci \
+            latexmk
+
+      - name: Upload dist PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-pdfs
+          path: dist/**/*.pdf
+          if-no-files-found: error
