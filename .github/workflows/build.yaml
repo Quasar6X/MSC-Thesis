@@ -4,26 +4,27 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
 
 jobs:
   build-latex:
     runs-on: ubuntu-24.04
 
     permissions:
-      contents: read
+      contents: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build container image
+      - name: Build image
         run: |
           docker build \
             -f .devcontainer/Dockerfile \
             -t thesis-builder:ci \
             .
 
-      - name: Run latexmk inside container
+      - name: Run latexmk
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE":/workspace \
@@ -31,9 +32,10 @@ jobs:
             thesis-builder:ci \
             latexmk
 
-      - name: Upload dist PDFs
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: dist-pdfs
-          path: dist/**/*.pdf
-          if-no-files-found: error
+          name: Release ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            dist/*.pdf
