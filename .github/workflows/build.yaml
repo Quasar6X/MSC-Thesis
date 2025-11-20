@@ -73,7 +73,7 @@ jobs:
 
       - name: Run latexmk
         run: |
-          ./build.sh "$GITHUB_WORKSPACE"
+          ./build.sh -w ${{ github.workspace }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
