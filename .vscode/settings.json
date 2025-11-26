@@ -2,8 +2,16 @@
     "[latex]": {
         "editor.defaultFormatter": "James-Yu.latex-workshop",
         "editor.formatOnSave": true,
+        "editor.rulers": [120]
     },
     "latex-workshop.formatting.latex": "latexindent",
+    "latex-workshop.formatting.latexindent.args": [
+        "-m",
+        "-c",
+        "%DIR%/",
+        "%TMPFILE%",
+        "-l=%WORKSPACE_FOLDER%/latexindent.yaml"
+    ],
     "latex-workshop.latex.autoBuild.run": "never",
     "latex-workshop.latex.autoClean.run": "onBuilt",
     "latex-workshop.latex.recipe.default": "latexmk",
