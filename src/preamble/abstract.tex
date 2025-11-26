@@ -1,0 +1,48 @@
+\thispagestyle{plain}
+
+\begin{center}
+    \large
+    \textbf{Feladatkiírás}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{Feladatkiírás}
+\end{center}
+
+A feladat egy elosztott teszt rendszer fejlesztése, ami képes fordítóprogramok tesztelésére. A tesztrendszer bemenete a
+teszt forrásfájlok, egy \textquote{\textit{SET}} fájl, ami meghatározza az egy teszt csomagba tartozó forrásfájlokat,
+valamint egy konfigurációs fájl, ami megszorításokat, kombinációkat és kapcsolókat ad a teszt csomag futtatására. A
+rendszer képes a különböző forrás fájlokat és kapcsolókat átadni a tesztelendő fordítóprogram számára, majd ellenőrizni
+a fordítóprogram kimenetét és kategorizálni azt. A rendszer három különböző teszt típust képes kezelni:
+
+\begin{itemize}
+    \item Fordítási teszt, elvárt viselkedés, hogy tárgykód jön létre.
+    \item Fordítási és linkelési teszt, elvárt viselkedés, hogy futtatható bináris jön létre.
+    \item Futtatható teszt, elvárt viselkedés, hogy a lefordított tesztet valamilyen futás idejű logika ellenőrzi.
+\end{itemize}
+
+A futás idejű tesztek egy vékony \textquote{\textit{runtime}} könyvtáron keresztül működnek, míg a fordítási és
+linkelési idejű teszteknél vagy diagnosztikai üzenet, vagy hiba nélküli futás az elvárt viselkedés.
+
+A harmadik pontnak megfelelően a rendszer képes egy megfelelő emulátor használatára, ha a futtatható állomány nem a
+futtató platformra készült. Ezenfelül a rendszer képes véletlenszerűen generált tesztek generálására a
+\textquote{\textit{Csmith}} programon keresztül. A rendszer egy egyszerű kliens-szerver protokollon keresztül képes
+elosztottan teszteket futtatni.
+
+\begin{center}
+    \large
+    \textbf{Tartalmi összefoglaló}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{Tartalmi összefoglaló}
+\end{center}
+
+A szakdolgozat témája egy elosztott fordítóprogram teszt rendszer fejlesztésével foglalkozik. A feladat megismerése
+után először az alap funkcionalitás, a tesztek futtatását fogom implementálni. Erre az alapra építhető a konfigurációs
+fájl megadása, a tesztek kategorizálása, a véletlenszerűen generált tesztek előállítása, és az alkalmazás elosztott
+kliens-szerver részének fejlesztése.
+
+A fejlesztés Fedora 41 operációs rendszeren folyik, Python 3.12 nyelven, a nyelv viszonylag új statikus típusosságát
+használva. A fejlesztéshez Visual Studio Code fejlesztő környezetet használok, python programozáshoz specifikus
+bővítményekkel. Debuggoláshoz a debugpy eszközt használom.
+
+\begin{itemize}
+    \item \textit{\textbf{Kulcsszavak:} fordítóprogram, elosztott alkalmazás, teszt rendszer, statikus python}
+\end{itemize}

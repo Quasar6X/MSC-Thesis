@@ -1,0 +1,24 @@
+\chapter{Bevezetés}
+
+Diplomamunkám a \textit{SuperSet} névre keresztelt, általam fejlesztett, elosztott fordítóprogram teszt keretrendszert
+mutatja be. A fordítóprogramok tesztelése egy korántsem triviális téma. Különböző módzsertanok a fordítóprogramok
+különböző aspektusait, kimeneteit hivatottak tesztelni. A \textit{SuperSet} célja egy olyan teszt keretrendszert
+nyűjtani, ami az alábbi tulajdonságokkal rendelkezik:
+
+\begin{itemize}
+    \item Támogatja a nyelvi \emph{konforomanciát} igazoló, valamint \emph{fuzz} tesztek futtatását.
+    \item Könnyen, de mégis részletesen és robusztusan konfigurálható. Lehetővé teszi fordítóprogram konfigurációinak
+          kombinációjat és kizárását is.
+    \item Lehetővé teszi különböző teszt esetek, tesztecsomagba való szervezését.
+    \item Keresztfordítók esetén képes a futásidejű teszteket szimulátor alkalmazásokban futtatni.
+    \item A tesztcsomag írónak lehetőséget biztosít a konkrét fordítóprogram invokációt programozottan változtatni egy
+          bővítmény rendszeren keresztül.
+    \item Nem utolsó sorban lehetőséget ad az elosztott futtatásra, hogy a nagy méretű tesztcsomagok gyorsabban
+          fussanak, feltéve hogy extra hardver áll rendelkezésre.
+\end{itemize}
+
+A projekt érdekessége, hogy a Python programozási nyelv egy relatív új, extra típus annotációkkal ellátott változatában
+készült. A legtöbb típus annotációnak nincs futásidejű szemantikája, ugyanakkor ellenőrizhetők egy harmadik féltől
+származó programokkal \cite{mypy}, \cite{pyright}, \cite{ty}. A típussoság nagyban megkönyítette a fejlesztési
+folyamatot és nagyobb konfidenciát adott a kód helyességére nézve. Az implementáció során törekedtem a
+kódolvashatóságra, a \textit{DRY} és a \textit{SOLID} programozási elvek betartására.
