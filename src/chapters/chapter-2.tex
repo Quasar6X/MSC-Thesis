@@ -1,0 +1,35 @@
+\chapter{Szoftver architektútra}
+
+Ebben a fejezetben egy általános áttekintést adok a \textit{SuperSet} felépítéséről, a projekt struktúráról és a
+fejlesztést támogató folyamatokról.
+
+A \textit{SuperSet} egy elosztott tesz keretrendszser, amely Python 3.12 \cite{python312} nyelvben implementált. A
+verzió kezelés Git segítségével történt. A \textit{SuperSet} mind logikailag mind modul szinten struktúrált. Ez a
+struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntartását és az implementációs részletek elrejtését.
+
+\section{A projekt felépítés}
+
+Ebben a fejezetben röviden ismertetem a szoftverkomponenseket amelyek felépítik a \textit{SuperSet} elosztott teszt
+keretrendszert alkamazást. Mélyebb működésükre, konkrét implementációs részleteikre, és az azokat alátámasztó
+indoklásokora a komponensek saját fejezeteiben fogok kitérni.
+
+A teszt keretrendszer hét fő szoftver komponensből áll amelyek két \emph{nem} diszjunkt halmazba sorolhatók.
+
+Az első halmaz a lokális futtatásért felelős szoftver komponenseket tartalmazza. Ebbe a halmazba tartozik a
+\textit{run.py} fájl által implementált \textit{SuperSet} szoftver komponens, amely névadója lett a projektnek.
+
+A második halmaz az elosztott futtatáshoz szükséges szoftver komponenseket tartalmazza. Ide tartozik a
+\textit{client.py} fájl által implementált \textit{SuperSetConsumer} és a \textit{server.py} által implementált
+\textit{SuperSetProducer} szoftver komponensek.
+
+A két halmaz metszetében azok a szoftver komponensek szerepelnek amelyek elengedhetetlenek mind az elosztott, mind a
+lokális futtatáshoz. Ezek a komponensek a \textit{Gekko}, a \textit{ConfigManager}, a \textit{SystemUnderTest}
+(továbbiakban \textit{Sut}), illetve a program kimenet szabványos formára hozásáért felelős \textit{Reporter}.
+
+\subsection{A \textit{SuperSet} szoftver komponens}
+
+A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a \textit{ConfigManager}
+szoftver komponens által előállított teszt csomagok futtatása, valamint a \textit{Gekko} szoftver komponens által
+előállított \textit{fuzz} típusú teszt csomagok futtatása is. Továbbá a \textit{ConfigManagertől} megkapja a tesztekre
+érvényes beállításokat is, azok kapcsolatatival és kizárásaival, így megalkotja a futtatási mátrixot. Kimenetét egy
+\textit{SQLite} \cite{sqlite} adatbázisban tárolja.
