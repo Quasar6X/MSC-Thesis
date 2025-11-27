@@ -3,32 +3,32 @@
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
 
-FROM ubuntu:24.04
+FROM ubuntu:25.10
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get -y install --no-install-recommends \
-    apt-utils=2.8.3* \
+    apt-utils=3.1.6* \
     # Verify git and needed tools are installed
-    git=1:2.43.0* \
+    git=1:2.51.0* \
     procps=2:4.0.4* \
     # Install Tex Live
     && apt-get -y upgrade \
     && apt-get -y install --no-install-recommends \
-    texlive-latex-base=2023.20240207* \
-    texlive-extra-utils=2023.20240207* \
-    texlive-latex-extra=2023.20240207* \
-    texlive-bibtex-extra=2023.20240207* \
-    texlive-lang-all=2023.20240207* \
-    biber=2.19* \
-    chktex=1.7.8* \
-    latexmk=1:4.83* \
-    make=4.3* \
-    python3-pygments=2.17.2* \
-    python3-pkg-resources=68.1.2* \
-    curl=8.5.0* \
+    texlive-latex-base=2024.20250309* \
+    texlive-extra-utils=2024.20250309* \
+    texlive-latex-extra=2024.20250309* \
+    texlive-bibtex-extra=2024.20250309* \
+    texlive-lang-all=2024.20250309* \
+    biber=2.20* \
+    chktex=1.7.9* \
+    latexmk=1:4.87* \
+    make=4.4.1* \
+    python3-pygments=2.18.0* \
+    python3-pkg-resources=78.1.1* \
+    curl=8.14.1* \
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
