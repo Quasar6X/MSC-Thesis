@@ -1,3 +1,4 @@
 .latex-aux
 dist
 *.log
+scratch.tex
