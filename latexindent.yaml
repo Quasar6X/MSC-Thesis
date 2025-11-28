@@ -11,3 +11,20 @@ modifyLineBreaks:
   commands:
     footnote:
       CommandStartsOnOwnLine: 1
+
+indentAfterHeadings:
+  section:
+    indentAfterThisHeading: 1
+    level: 1
+  subsection:
+    indentAfterThisHeading: 1
+    level: 2
+  subsubsection:
+    indentAfterThisHeading: 1
+    level: 3
+
+indentRules:
+  chapter: ''
+  section: '    '
+  subsection: '    '
+  subsubsection: '    '
