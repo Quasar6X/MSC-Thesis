@@ -9,27 +9,98 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
 
 \section{A projekt felépítés}
 
-Ebben a fejezetben röviden ismertetem a szoftverkomponenseket amelyek felépítik a \textit{SuperSet} elosztott teszt
-keretrendszert alkamazást. Mélyebb működésükre, konkrét implementációs részleteikre, és az azokat alátámasztó
-indoklásokora a komponensek saját fejezeteiben fogok kitérni.
+    Ebben a fejezetben röviden ismertetem a szoftverkomponenseket amelyek felépítik a \textit{SuperSet} elosztott teszt
+    keretrendszert alkamazást. Mélyebb működésükre, konkrét implementációs részleteikre, és az azokat alátámasztó
+    indoklásokora a komponensek saját fejezeteiben fogok kitérni.
 
-A teszt keretrendszer hét fő szoftver komponensből áll amelyek két \emph{nem} diszjunkt halmazba sorolhatók.
+    A teszt keretrendszer hét fő szoftver komponensből áll amelyek két \emph{nem} diszjunkt halmazba sorolhatók.
 
-Az első halmaz a lokális futtatásért felelős szoftver komponenseket tartalmazza. Ebbe a halmazba tartozik a
-\textit{run.py} fájl által implementált \textit{SuperSet} szoftver komponens, amely névadója lett a projektnek.
+    Az első halmaz a lokális futtatásért felelős szoftver komponenseket tartalmazza. Ebbe a halmazba tartozik a
+    \textit{run.py} fájl által implementált \textit{SuperSet} szoftver komponens, amely névadója lett a projektnek.
 
-A második halmaz az elosztott futtatáshoz szükséges szoftver komponenseket tartalmazza. Ide tartozik a
-\textit{client.py} fájl által implementált \textit{SuperSetConsumer} és a \textit{server.py} által implementált
-\textit{SuperSetProducer} szoftver komponensek.
+    A második halmaz az elosztott futtatáshoz szükséges szoftver komponenseket tartalmazza. Ide tartozik a
+    \textit{client.py} fájl által implementált \textit{SuperSetConsumer} és a \textit{server.py} által implementált
+    \textit{SuperSetProducer} szoftver komponensek.
 
-A két halmaz metszetében azok a szoftver komponensek szerepelnek amelyek elengedhetetlenek mind az elosztott, mind a
-lokális futtatáshoz. Ezek a komponensek a \textit{Gekko}, a \textit{ConfigManager}, a \textit{SystemUnderTest}
-(továbbiakban \textit{Sut}), illetve a program kimenet szabványos formára hozásáért felelős \textit{Reporter}.
+    A két halmaz metszetében azok a szoftver komponensek szerepelnek amelyek elengedhetetlenek mind az elosztott, mind
+    a lokális futtatáshoz. Ezek a komponensek a \textit{Gekko}, a \textit{ConfigManager}, a \textit{SystemUnderTest}
+    (továbbiakban \textit{Sut}), illetve a program kimenet szabványos formára hozásáért felelős \textit{Reporter}.
 
-\subsection{A \textit{SuperSet} szoftver komponens}
+    A felvázolt struktúrát ábrázolja az alábbi Venn-diagram \ref{fig:kompdiag}.
 
-A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a \textit{ConfigManager}
-szoftver komponens által előállított teszt csomagok futtatása, valamint a \textit{Gekko} szoftver komponens által
-előállított \textit{fuzz} típusú teszt csomagok futtatása is. Továbbá a \textit{ConfigManagertől} megkapja a tesztekre
-érvényes beállításokat is, azok kapcsolatatival és kizárásaival, így megalkotja a futtatási mátrixot. Kimenetét egy
-\textit{SQLite} \cite{sqlite} adatbázisban tárolja.
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \begin{scope} [fill opacity=.3]
+                \draw (-5,5) rectangle (6,-3);
+                \draw[fill=red, draw=black] (-1.5,1) circle (3);
+                \draw[fill=blue, draw=black] (1.5,1) ellipse (4 and 3);
+
+                \node[fill opacity=.6] at (-2,4.5) {\LARGE\textbf{Lokális}};
+                \node[fill opacity=.6] at (2.5,4.5) {\LARGE\textbf{Elosztott}};
+
+                \node[fill opacity=.8] at (-3.5,1) {\textit{SuperSet}};
+
+                \node[fill opacity=.8] at (3.3,2) {\textit{SuperSetProducer}};
+                \node[fill opacity=.8] at (3.3,0) {\textit{SuperSetConsumer}};
+
+                \node[fill opacity=.8] at (-0.4,2.6) {\textit{Gekko}};
+                \node[fill opacity=.8] at (-0.4,1.6) {\textit{Reporter}};
+                \node[fill opacity=.8] at (-0.4,0.6) {\textit{SystemUnderTest}};
+                \node[fill opacity=.8] at (-0.4,-0.4) {\textit{ConfigManager}};
+            \end{scope}
+        \end{tikzpicture}
+        \caption{\label{fig:kompdiag} Szoftver komponens csoport diagram}
+    \end{figure}
+
+    \subsection{A \textit{SuperSet} szoftver komponens}
+
+        A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a
+        \textit{ConfigManager} szoftver komponens által előállított teszt csomagok futtatása, valamint a \textit{Gekko}
+        szoftver komponens által előállított \textit{fuzz} típusú teszt csomagok futtatása is. Továbbá a
+        \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolatatival és kizárásaival,
+        így megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite} \cite{sqlite} adatbázisban tárolja.
+
+    \subsection{A \textit{SuperSetProducer} és a \textit{SuperSetConsumer} szoftver komponensek}
+
+        Ez a két komponens felelős az elosztott működésért.
+
+        A \textit{SuperSetProducer} a szerver alkalmazás által kezelt sorba fogja rakni a kért tesztcsomagokat.
+        Gyakorlatilag a \textit{SuperSet} szoftver komponens által végzett munka első részét végzi, tehát a
+        \textit{Gekko} és a \textit{ConfigManager} szoftver komponensekkel kommunikál így előállítja a végső futtatási
+        konfigurációt.
+
+        A \textit{SuperSetConsumer} a kliens alkalmazások oldalán van jelen. A szervertől kapott tesztcsomagokat osztja
+        fel, futtatja le a teszt eseteket, majd aggregálja az eredményeket és visszaküldi a szerver alkalmazásnak.
+
+    \subsection{A \textit{Gekko} szoftver komponens}
+
+        A \textit{Gekko} szoftver komponens dinamikusan generál egy előre megadott mennyiségű \textit{fuzz} típusú
+        teszt csomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal
+        a működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a
+        kiementét a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
+        \textit{Csmith} \cite{csmith} programot használja, azonban könnyen bővíthető más genráló programokkal is.
+
+    \subsection{A \textit{ConfigManager} szoftver komponens}
+
+        A \textit{ConfigManager} szoftver komponens felelős a keretrendszer számára elérhetővé tenni a futás
+        konfigurációs fájlnak a tartalmát. Ez a komponens képes a konfigurációs fájlokból \textit{Python} primitív és
+        aggregált típusokat előállítani. A különböző konfigurációs értékekhez futás időben elérhető típusokat rendel,
+        így a konfigurációs fájlból olvasott nyers sztringek értelmezése személyre szabható. Ezzel a mechanizmussal
+        különböző fordítóprogramok igényeihez alakítható a konfigurációs fájl, akár teljesen különböző
+        \textit{domain-specifikus nyelv} is implementálható.
+
+    \subsection{A \textit{Sut} szoftver komponens}
+
+        A \textit{Sut} szoftver komponens a tesztelt fordítóprogram futtatási parancsait definiálja. Három tesztelési
+        mód létezik, \emph{fordítási}, \emph{szerkesztési}, és \emph{futtatási}, ez utóbbi mód lehetőséget ad
+        \emph{keresztfordító programok} kimeneti fájljainak futtatására is. A komponens lehetőséget ad mind a három mód
+        parancsainak módosítására. A \textit{Sut} komponenseket egy bővítmény rendszer tölti be, így akár az
+        alkalmazáson kívülről is van lehetőség a tesztelési módok személyre szabására.
+
+    \subsection{A \textit{Reporter} szoftver komponens}
+
+        A \textit{Reporter} szoftver komponens készít a \textit{SuperSet} komponens kimeneti \textit{SQLite}
+        adatbázisából, riportokat. Két mód létezik az első humán olvasható \textit{HTML} riportot készít, a második a
+        standard \textit{JUnit XML} formátumot használja. Ez utóbbi formátum más alkalmazások által is felismerhető így
+        lehető teszi az eredmények vizualizálását harmadik féltől származó szoftverekben is.
