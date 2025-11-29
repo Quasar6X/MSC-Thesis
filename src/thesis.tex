@@ -8,9 +8,22 @@
 \usepackage{csquotes}
 \usepackage{enumerate, graphicx, xcolor}
 \usepackage{hyperref}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.9}
 \usepackage{minted}
 \usemintedstyle{emacs}
+\setminted{
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=LightGray,
+    fontsize=\footnotesize,
+    linenos,
+    breaklines
+}
 \usepackage{tikz}
+\usepackage{syntax}
+\setlength{\grammarindent}{14em}
 
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
@@ -28,10 +41,9 @@
 
 \usepackage{lastpage}
 \usepackage{fancyhdr}
-\usepackage{titlesec}
 
 \newcommand\originalchapter{}
-\let\originalchapter\chapter{}
+\let\originalchapter\chapter % chktex 1
 \RenewDocumentCommand{\chapter}{som}{
     \IfBooleanTF{#1}{
         \originalchapter*{#3}
@@ -46,8 +58,7 @@
     }
 }
 
-\titleformat{\chaper}{hang}{\huge\bfseries}{\thechapter.}{1em}{}
-
+\makeatletter \renewcommand\verbatim@font{\normalfont\itshape} % chktex 6
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
 \fancypagestyle{fancy}{
     \fancyhf{}
@@ -96,6 +107,9 @@
 
 \newpage
 \input{chapters/chapter-2.tex}
+
+\newpage
+\input{chapters/chapter-3.tex}
 
 \newpage
 \input{appendices/bibliography.tex}

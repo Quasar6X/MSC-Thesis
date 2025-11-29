@@ -1,0 +1,100 @@
+\chapter{A \textit{ConfigManager}}
+
+Ahogy azt a~\ref{intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel a a
+konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek, arra hogy hogyan értelmezi a keretrendszer a
+konfigurációt, a kód oldalán és arra is hogy milyen sémájú konfigurációt vár.
+
+\section{A konfigurációs fájl}
+
+    A konfigurációs formátum \textit{.INI} fájl formátumot használ. Jogosan merül fel az olvasóban a kérdés, hogy miért
+    pont erre a napjainkban már kevésbé divatos formátumra esett a választás.
+
+    Az \textit{.INI} fájloknak több előnye is van, gyorsan beolvasható, a Python standard függvénykönyvtár is ad ehhez
+    egy implementációt~\cite{pythonconfigparser}. Továbbá, emberek számára is olvasható, de a legfontosabb tulajdonsága
+    ami miatt rá esett a választásom, hogy szekciókra lehet bontani az adatokat. Ez a szekciókra bontás lehetővé teszi
+    hogy felállítsunk egy hierarchiát a konfigurációk között, így elkerülve a duplikált konfigurációkat.
+
+    A hierarchia gyökere a \textit{DEFAULT} szekció, minden más szekció ennek az értékeit tudja felülírni vagy
+    kibővíteni. A konfigurációk előtti \textit{+} jelzi hogy a szekció kibővíti az adott konfigurációs értéket, nem
+    pedig felülírja azt.
+
+    A~\ref{fig:section-hierarchy} ábra mutatja, hogyan lehet egy meglévő szekcióból konfigurációt örökölni, illetve
+    felülírni. Ha a program futás során a \textit{DEFAULT} szekciót választjuk akkor a konfigurációs elemeink értékei
+    rendre \verb|CFG1 = [1, 2]| és \verb|CFG2 = [3, 4]|. Ha a \textit{MY\_SECTION} szekciót választjuk akkor pedig,
+    \verb|CFG1 = [1, 2, 3]| és \verb|CFG2 = [5]|.
+
+    \begin{figure}
+        \centering
+        \begin{minted}{INI}
+[DEFAULT]
+CFG1 =
+    1
+    2
+CFG2 =
+    3
+    4
+[MY_SECTION]
++CFG1 =
+    3
+CFG2 =
+    5
+        \end{minted}
+        \caption{\label{fig:section-hierarchy} A szekció hierarchia konstrukció}
+    \end{figure}
+
+    \pagebreak
+    \subsection{A \textit{BuildOption} konfigurációk}
+
+        A konfigurációs fájlban pár beállítástól eltekintve, a konfigurációs elemek egy-egy fordítóprogram kapcsolóhoz
+        tartoznak. Ezek a \textit{BuildOption} beállítások. Ezek a beállítások egy leképezést alkotnak a
+        konfigurációból a Python kódba.
+
+        A támogatásukhoz fel kell venni egy-egy osztályt ami kezeli a konfigurációból beolvasott érték, fordítási
+        kapcsolóra való konvertálását. Ezzel gyakorlailag függetleníteni lehet a konfigurációs értékek szintaxisát a
+        fordítóprogram által várt parancssori paraméterek szintaxisától. Pár példa a teljeség igénye nélkül
+        \textit{BuildOption} kapcsolóra: \verb|ARCH, OPT_LEVEL, EXCEPTIONS, BUILTIN, FLOAT_ABI|.
+
+    \subsection{A \textit{Suites} konfiguráció}
+
+        Az előbbiekben láttuk, hogy hogyan lehet kapcsolókat definiálni rugalmas módon a fordítóprogram számára, de
+        hogyan fogja tudni hogy milyen teszteket futtasson?
+
+        Erre ad megoldást a \textit{Suites} konfigurációs mező ahol fel kell sorolni a futtatni kívánt teszt
+        csomagokat. A teszt csomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden sorban
+        egy elérési útvonallal. Ezzel a mechanizmussal bármilyen teszt esetekből álló teszt csomag definiálható.
+
+        A legnagyobb előnye ennek a formátumnak, hogy a keretrendszer követni tudja, hogy melyik teszt esetet futtatta
+        már. Így ha a teszt csomagok osztoznak egy-egy teszt eseten akkor a keretrendszer egyszerűen
+        \textbf{behelyettesíti} a meglévő eredményt.
+
+        Ezen mechanizmus adta az ötletet a projekt elnevezésére.
+
+    \subsection{A \textit{Matrix} és a \textit{Constraints}}
+
+        Most, hogy már ki tudjuk választani a fordítóprogram számára megfelelő opciókat, és definiálni tudjuk a
+        futtatandó teszt csomagokat a kettő beállítás között kapcsolatot kell teremteni. Erre a kapcsolat teremtésre
+        szolgálnak a \textit{Matrix} és a \textit{Constraints} beállítások.
+
+        A \textit{Matrix} beállításban fel kell sorolni az összes olyan \textit{BuildOption} konfigurációt amit
+        futtatni szeretnénk.
+
+        A \textit{Constraints} beállításban adhatunk meg megszorításokat, hogy bizonyos teszt csomagokra csak bizonyos,
+        kapcsolókat engedélyezzünk. Így a \textit{Matrix} által generált potenciálisan exponenciális kombinációkat
+        levághatóak, ha nem szükségesek. A szintaxist a következő \textit{EBNF}~\ref{fig:ebnf} nyelvtan írja le.
+
+        \begin{figure}[h]
+            \hspace*{-1.5in}
+            \centering
+            \begin{grammar}
+                <constraint> ::= <suite> <build_option_constraint>+ %chktex 26
+
+                <build_option_constraint> ::= "&" <id> %chktex 18 chktex 26
+                \alt "&" <build_option_with_value> %chktex 1 chktex 18
+
+                <suite> ::= "*" %chktex 18 chktex 26
+                \alt <id> %chktex 1 chktex 18
+
+                <id> ::= [a-zA-Z0-9_]+ %chktex 8 chktex 18 chktex 26
+            \end{grammar}
+            \caption{\label{fig:ebnf} A \textit{Constraints} kapcsoló nyelvtana}
+        \end{figure}
