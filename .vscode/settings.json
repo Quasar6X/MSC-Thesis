@@ -36,6 +36,5 @@
             ],
             "env": {}
         },
-    ],
-    "makefile.configureOnOpen": false
+    ]
 }

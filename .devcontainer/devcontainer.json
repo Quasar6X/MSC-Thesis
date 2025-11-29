@@ -9,7 +9,6 @@
                 "github.vscode-github-actions",
                 "james-yu.latex-workshop",
                 "ms-azuretools.vscode-containers",
-                "ms-vscode.makefile-tools",
                 "redhat.vscode-yaml",
                 "timonwong.shellcheck"
             ]
