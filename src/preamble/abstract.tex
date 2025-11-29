@@ -1,17 +1,15 @@
-\thispagestyle{plain}
+\chapter*{Feladatkiírás}
 
-\begin{center}
-    \large
-    \textbf{Feladatkiírás}
-    \phantomsection{}
-    \addcontentsline{toc}{chapter}{Feladatkiírás}
-\end{center}
+A feladat egy elosztott teszt rendszer fejlesztése, ami képes fordítóprogramok tesztelésére.
 
-A feladat egy elosztott teszt rendszer fejlesztése, ami képes fordítóprogramok tesztelésére. A tesztrendszer bemenete a
-teszt forrásfájlok, egy \textquote{\textit{SET}} fájl, ami meghatározza az egy teszt csomagba tartozó forrásfájlokat,
-valamint egy konfigurációs fájl, ami megszorításokat, kombinációkat és kapcsolókat ad a teszt csomag futtatására. A
-rendszer képes a különböző forrás fájlokat és kapcsolókat átadni a tesztelendő fordítóprogram számára, majd ellenőrizni
-a fordítóprogram kimenetét és kategorizálni azt. A rendszer három különböző teszt típust képes kezelni:
+A tesztrendszer bemenete a teszt forrásfájlok valamint egy konfigurációs fájl, ami megszorításokat, kombinációkat és
+kapcsolókat ad a teszt csomag futtatására.
+
+A rendszer képes a különböző forrás fájlokat és kapcsolókat átadni a tesztelendő fordítóprogram számára, majd
+ellenőrizni a fordítóprogram kimenetét és kategorizálni azt.
+
+\noindent
+A rendszer három különböző teszt típust képes kezelni:
 
 \begin{itemize}
     \item Fordítási teszt, elvárt viselkedés, hogy tárgykód jön létre.
@@ -19,30 +17,53 @@ a fordítóprogram kimenetét és kategorizálni azt. A rendszer három különb
     \item Futtatható teszt, elvárt viselkedés, hogy a lefordított tesztet valamilyen futás idejű logika ellenőrzi.
 \end{itemize}
 
-A futás idejű tesztek egy vékony \textquote{\textit{runtime}} könyvtáron keresztül működnek, míg a fordítási és
-linkelési idejű teszteknél vagy diagnosztikai üzenet, vagy hiba nélküli futás az elvárt viselkedés.
+A fordítási és linkelési idejű teszteknél vagy diagnosztikai üzenet, vagy hiba nélküli fordítás az elvárt viselkedés,
+míg futtatható tesztek esetén a teszt program hibátlan futása.
 
 A harmadik pontnak megfelelően a rendszer képes egy megfelelő emulátor használatára, ha a futtatható állomány nem a
-futtató platformra készült. Ezenfelül a rendszer képes véletlenszerűen generált tesztek generálására a
-\textquote{\textit{Csmith}} programon keresztül. A rendszer egy egyszerű kliens-szerver protokollon keresztül képes
-elosztottan teszteket futtatni.
+futtató platformra készült.
 
-\begin{center}
-    \large
-    \textbf{Tartalmi összefoglaló}
-    \phantomsection{}
-    \addcontentsline{toc}{chapter}{Tartalmi összefoglaló}
-\end{center}
+Ezenfelül a rendszer képes véletlenszerűen generált tesztek generálására a \textit{Csmith} programon keresztül.
 
-A szakdolgozat témája egy elosztott fordítóprogram teszt rendszer fejlesztésével foglalkozik. A feladat megismerése
-után először az alap funkcionalitás, a tesztek futtatását fogom implementálni. Erre az alapra építhető a konfigurációs
-fájl megadása, a tesztek kategorizálása, a véletlenszerűen generált tesztek előállítása, és az alkalmazás elosztott
-kliens-szerver részének fejlesztése.
+A rendszer egy egyszerű kliens-szerver protokollon keresztül képes elosztottan teszteket futtatni.
 
-A fejlesztés Fedora 41 operációs rendszeren folyik, Python 3.12 nyelven, a nyelv viszonylag új statikus típusosságát
-használva. A fejlesztéshez Visual Studio Code fejlesztő környezetet használok, python programozáshoz specifikus
-bővítményekkel. Debuggoláshoz a debugpy eszközt használom.
+\chapter*{Tartalmi összefoglaló}
 
+\noindent
+\textbf{A téma megnevezése:} Elosztott fordítóprogram teszt rendszer fejlesztése.
+
+\noindent
+\textbf{A megadott feladat megfogalmazása:} A diplomamunka célja egy fordítóprogram teszt keretrendszer fejlesztése,
+modern technológiák felhasználásával. A feladat egy olyan komplex rendszer
+tervezése és megvalósítása amely képes különböző fordítóprogramok viselkedését tesztelni bementi fájlokkal. Működését
+tekintve, képes elosztottan egy kliens-szerver architektúrát alkamzva dolgozni, ahol egy kitüntetett szerver alkalmazás
+vezérli a kliens alkalmazások teszt futtatásait.
+
+\noindent
+\textbf{A megoldási mód:} A projekt megvalósítása során egy könnyen bővíthető átlátható szoftver architektúra
+felállítása volt a cél. A forrásnyelv a Python 3.12, modern típus annotációkkal elátott változata. A teszt keretrendszer
+bemeneti konfigurációs formátuma az \textit{.INI}. Kimenetét pedig egy \textit{SQLite} adatbázisba menti amiből további
+lépések alkalmazásával képes, humán olvasható \textit{HTML} vagy más eszközök által olvasható \textit{JUnit XML}
+formátumot generálni. A keretrendszer képes \textit{fuzz} teszteket generálni, hogy a fordítóprogramokat nem várt
+bemenetekkel is tesztelni tudja.
+
+\noindent
+\textbf{Alkalmazott szoftver eszközök:}
 \begin{itemize}
-    \item \textit{\textbf{Kulcsszavak:} fordítóprogram, elosztott alkalmazás, teszt rendszer, statikus python}
+    \item Fedora Linux 42 operációs rendszer
+    \item Python 3.12 szkriptnyelv, statikus típus ellenőrzéssel
+    \item Visual Studio Code fejlesztői környezet, Pythen bővítmény csomaggal kiegészítve
+    \item Debugpy a fejlesztőkörnyetbe integrált debuggoláshoz
 \end{itemize}
+
+\noindent
+\textbf{Elért eredmények:} A projekt eredményeként létrejött egy robusztus, könnyen bővíthető és konfigurálható teszt
+keretrendszer amely a \textit{SuperSet} nevet viseli. A rendszer képes mind natív, mind kereszt fordítóprogramok
+kimenetét futtatni, így más az aktuális számítógéptől eltérő architektúrájú számítógépekre vagy mikrovezérlőkre készült
+futtatható állományokat is képes tesztelni. A statikus típusellenőrzés lehetővé tette a projekten való gyors iterálást,
+és növelte a konfidenciát az implementáció helyességét illetően. A keretrendszer adaptálható bármilyen fordítóprogram
+kapcsoló szintaxis kezelésére így elméletben futtatható akár \textit{Windows} platformon is. A \textit{fuzz} tesztek
+generálása is megvalósult.
+
+\noindent
+\textit{\textbf{Kulcsszavak:} fordítóprogram, elosztott alkalmazás, teszt rendszer, statikus python}
