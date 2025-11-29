@@ -3,7 +3,7 @@
 Ebben a fejezetben egy általános áttekintést adok a \textit{SuperSet} felépítéséről, a projekt struktúráról és a
 fejlesztést támogató folyamatokról.
 
-A \textit{SuperSet} egy elosztott tesz keretrendszser, amely Python 3.12 \cite{python312} nyelvben implementált. A
+A \textit{SuperSet} egy elosztott tesz keretrendszser, amely Python 3.12~\cite{python312} nyelvben implementált. A
 verzió kezelés Git segítségével történt. A \textit{SuperSet} mind logikailag mind modul szinten struktúrált. Ez a
 struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntartását és az implementációs részletek elrejtését.
 
@@ -26,7 +26,7 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
     a lokális futtatáshoz. Ezek a komponensek a \textit{Gekko}, a \textit{ConfigManager}, a \textit{SystemUnderTest}
     (továbbiakban \textit{Sut}), illetve a program kimenet szabványos formára hozásáért felelős \textit{Reporter}.
 
-    A felvázolt struktúrát ábrázolja az alábbi Venn-diagram \ref{fig:kompdiag}.
+    A felvázolt struktúrát ábrázolja az alábbi Venn-diagram~\ref{fig:kompdiag}.
 
     \begin{figure}
         \centering
@@ -59,7 +59,7 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
         \textit{ConfigManager} szoftver komponens által előállított teszt csomagok futtatása, valamint a \textit{Gekko}
         szoftver komponens által előállított \textit{fuzz} típusú teszt csomagok futtatása is. Továbbá a
         \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolatatival és kizárásaival,
-        így megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite} \cite{sqlite} adatbázisban tárolja.
+        így megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite}~\cite{sqlite} adatbázisban tárolja.
 
     \subsection{A \textit{SuperSetProducer} és a \textit{SuperSetConsumer} szoftver komponensek}
 
@@ -79,7 +79,7 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
         teszt csomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal
         a működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a
         kiementét a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
-        \textit{Csmith} \cite{csmith} programot használja, azonban könnyen bővíthető más genráló programokkal is.
+        \textit{Csmith}~\cite{csmith} programot használja, azonban könnyen bővíthető más genráló programokkal is.
 
     \subsection{A \textit{ConfigManager} szoftver komponens}
 

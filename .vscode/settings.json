@@ -13,11 +13,11 @@
         "-l=%WORKSPACE_FOLDER%/latexindent.yaml"
     ],
     "latex-workshop.latex.autoBuild.run": "never",
-    "latex-workshop.latex.autoClean.run": "onBuilt",
+    "latex-workshop.latex.autoClean.run": "never",
     "latex-workshop.latex.recipe.default": "latexmk",
     "latex-workshop.latex.recipes": [
         {
-            "name": "latexmk",
+            "name": "Build with latexmk",
             "tools": [
                 "latexmk"
             ]
@@ -32,9 +32,14 @@
                 "%WORKSPACE_FOLDER%/.latexmkrc",
                 "-synctex=1",
                 "-file-line-error",
-                "-cd-"
+                "-cd",
+                "%DOC%"
             ],
             "env": {}
         },
-    ]
+    ],
+    "latex-workshop.latex.search.rootFiles.include": [
+        "**/thesis.tex"
+    ],
+    "latex-workshop.linting.chktex.enabled": true
 }
