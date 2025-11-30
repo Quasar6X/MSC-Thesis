@@ -2,6 +2,49 @@
 \vspace{2 cm}
 
 \begin{figure}[ht]
+    \hspace*{-1.5cm}
+    \centering
+    \begin{mdframed}[backgroundcolor=LightGray]
+        \begin{grammar}
+            <constraint> ::= <suite> "&" <build-option-constraints> %chktex 18 chktex 26
+
+            <build-option-constraints> ::= <build-option-constraints> "&" <build-option> %chktex 18 chktex 26
+            \alt <build_option> %chktex 1
+
+            <build-option> ::= <id> %chktex 26
+            \alt <id> ":" <id> %chktex 1 chktex 18
+
+            <suite> ::= "*" %chktex 18 chktex 26
+            \alt <id> %chktex 1 chktex 18
+
+            <id> ::= non empty string %chktex 26
+        \end{grammar}
+    \end{mdframed}
+    \caption{\label{fig:bnf} A \textit{Constraints} konfigurációk nyelvtana}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minted}{python}
+class ConfigManager:
+    def __init__(self, config_file: "StrOrPath", section: str = "DEFAULT") -> None: ...
+    def get_item(self, item: str, default: str | None = None) -> str: ...
+    def get_item_default(self, item: str, default: str | None = None) -> str: ...
+    def get_bool(self, item: str, *, default: bool | None = None) -> bool: ...
+    def get_bool_default(self, item: str, *, default: bool | None = None) -> bool: ...
+    def get_int(self, item: str, default: int | None = None) -> int: ...
+    def get_int_default(self, item: str, default: int | None = None) -> int: ...
+    def get_float(self, item: str, default: float | None = None) -> float: ...
+    def get_float_default(self, item: str, default: float | None = None) -> float: ...
+    def get_lines(self, item: str, default: str | None = None) -> list[str]: ...
+    def get_lines_default(self, item: str, default: str | None = None) -> list[str]: ...
+    def get_list(self, item: str, default: str | None = None, sep: str | None = None) -> list[str]: ...
+    def get_list_default(self, item: str, default: str | None = None, sep: str | None = None) -> list[str]: ...
+    \end{minted}
+    \caption{\label{fig:config-manager} A \textit{ConfigManager} publikus interfésze}
+\end{figure}
+
+\begin{figure}[ht]
     \centering
     \begin{minted}{INI}
 [DEFAULT]

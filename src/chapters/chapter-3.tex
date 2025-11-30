@@ -2,7 +2,7 @@
 
 Ahogy azt a~\ref{intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel a a
 konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek, arra hogy hogyan értelmezi a keretrendszer a
-konfigurációt, a kód oldalán és arra is hogy milyen sémájú konfigurációt vár.
+konfigurációt, a kód oldalán és arra is, hogy milyen formátumban várja a konfigurációt.
 
 \section{A konfigurációs fájl}
 
@@ -43,7 +43,7 @@ CFG2 =
     \end{figure}
 
     \noindent
-    Példa egy teljes konfigurációs fájlra \textbf{\ref{fig:config-full}. ábra}.
+    A \textbf{\ref{fig:config-full}. ábra} egy teljes konfigurációs fájlra ad példát.
 
     \subsection{A \textit{BuildOption} konfigurációk}
 
@@ -71,6 +71,7 @@ CFG2 =
 
         Ezen mechanizmus adta az ötletet a projekt elnevezésére.
 
+        \pagebreak
     \subsection{A \textit{Matrix} és a \textit{Constraints}}
 
         Most, hogy már ki tudjuk választani a fordítóprogram számára megfelelő opciókat, és definiálni tudjuk a
@@ -84,28 +85,6 @@ CFG2 =
         kapcsolókat engedélyezzünk. Így a \textit{Matrix} által generált potenciálisan exponenciális kombinációkat
         levághatóak, ha nem szükségesek. A szintaxist a következő \textbf{\ref{fig:bnf}. ábrán} látható \textit{BNF}
         nyelvtan írja le.
-
-        \begin{figure}[h]
-            \hspace*{-1.5cm}
-            \centering
-            \begin{mdframed}[backgroundcolor=LightGray]
-                \begin{grammar}
-                    <constraint> ::= <suite> "&" <build-option-constraints> %chktex 18 chktex 26
-
-                    <build-option-constraints> ::= <build-option-constraints> "&" <build-option> %chktex 18 chktex 26
-                    \alt <build_option> %chktex 1
-
-                    <build-option> ::= <id> %chktex 26
-                    \alt <id> ":" <id> %chktex 1 chktex 18
-
-                    <suite> ::= "*" %chktex 18 chktex 26
-                    \alt <id> %chktex 1 chktex 18
-
-                    <id> ::= non empty string %chktex 26
-                \end{grammar}
-            \end{mdframed}
-            \caption{\label{fig:bnf} A \textit{Constraints} konfigurációk nyelvtana}
-        \end{figure}
 
         Tekintsük a \textbf{\ref{fig:example-constraint}. ábrán} látható példa konfigurációt, ahol feltételezzük hogy a
         hivatkozott \textit{Suite} és a \textit{BuildOption} konfigurációk definiáltak.
@@ -133,3 +112,58 @@ CONSTRAINTS =
         \noindent
         További konfigurációs elemek is elérhetőek ezzel a szintexissal. A teljesség igénye nélkül pár példa:
         \textit{SKIPLISTS}, \textit{CFLAGS}, \textit{TIMEOUT_RUN}, \textit{TIMEOUT_COMPILE}.
+
+\section{A konfiguráció beolvasása}
+
+    A konfigurációt a \textit{ConfigManager} szoftver komponens olvassa be. Itt történik a szekció kiválasztása,
+    ügyelve a hierarchikus szekció kezelés szemantikájára.
+
+    A különböző értékeket a \textit{get\_*} és \textit{get\_*\_default} függvény család segítségével lehet beolvasni. A
+    csillag helyére a Python primitív típusok helyettesíthetőek be, kivéve a \textit{str}, valamint a \textit{lines} és
+    \textit{item} szavak. Az előbbi a lista típusú konfigurációs értékeket olvassa be, az utóbbi pedig pontosan egy
+    sztringet olvas. A \textit{default} utótaggal rendelkező függvények minding a \textit{DEFAULT} szekcióból olvasnak.
+    A \textit{ConfigManager} publikus interfészét a \textbf{\ref{fig:config-manager}. ábra} mutatja.
+
+    \pagebreak
+    \subsection{A \textit{ConfigGenerator}}
+
+        A beolvasás után a típus hozzárendelést a \textit{ConfigGenerator} alkomponens végzi. Bemenetében két
+        \textit{Mapping} típust kap. Az első sztrigekhez rendeli a tesztcsomagokat, a második pedig szintén
+        sztringekhez rendeli a \textit{BuildOption} beállításokat. Ezek alapján tudja legyártani a futtatáshoz a
+        megfelelő tesztcsomag objektumot \textit{create_target} függvénnyel, és futtatási kapcsolókat.
+
+        A \textit{ConfigGenerator} generikus mind a kettő említett típusában. Ez azért fontos mert különböző
+        konfigurációk különböző konkrét implementációkat használnak, így a hívó oldalán megjelenő objektumok típusa nem
+        veszik el. A generikus definícót az \textbf{\ref{fig:config-generator}. ábra} szemlélteti.
+
+        \begin{figure}[ht]
+            \centering
+            \begin{minted}{python}
+class ConfigGenerator[T: Target, O: Option]:
+    def __init__(
+        self,
+        config_manager: ConfigManager,
+        targets: "Mapping[str, type[T]]",
+        options: "Mapping[str, type[O]]",
+    ) -> None: ...
+
+    def create_target(name: str, *args: Any, **kwargs: Any) -> T: ...
+
+    def filter_configs(target: T) -> None: ...
+            \end{minted}
+            \caption{\label{fig:config-generator} A generikus \textit{ConfigGenerator} definíciója}
+        \end{figure}
+
+        A kapcsolók szűrése a \textit{filter_configs} függbényben történik. A szűrés eredménye a kimenő \textit{Target}
+        objektum \textit{configs} mezőjében kerül eltárolásra.
+
+\section{Összegzés}
+
+    A keretrendszer konfigurációs rendszere egy komplex rendszert alkot, azonban a probléma amelyet megold szintén
+    komplex. Hátránya, egy hagyományos sémával rendelkező leírónyelvvel szemben, osztályokkal kell modellezni a
+    konfigurációs elemeket.
+
+    Azonban a legnagyobb előnye is ebből származik, mert bármilyen leképezés megadható egy opció konfigurációs fájlban
+    megjelenő formája és a későbbi, parancsosori argumentum formája között. Így a konfigurációs fájl hordozható marad
+    különböző parancssori szintaktikát használó fordítóprogramok között. Ezt a működést reprodukálni hagyományos
+    sémákkal, nagyon hosszú és nehezen olvasható konfigurációhoz vezetne.
