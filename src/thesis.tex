@@ -7,8 +7,8 @@
 \usepackage{amsthm, amssymb, amsmath}
 \usepackage{csquotes}
 \usepackage{enumerate, graphicx, xcolor}
-\usepackage{hyperref}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{mdframed}
 \definecolor{LightGray}{gray}{0.9}
 \usepackage{minted}
 \usemintedstyle{emacs}
@@ -41,6 +41,19 @@
 
 \usepackage{lastpage}
 \usepackage{fancyhdr}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    anchorcolor=black,
+    citecolor=black,
+    filecolor=black,
+    menucolor=black,
+    runcolor=black,
+    urlcolor=black,
+    pdftitle={DIPLOMAMUNKA},
+    pdfpagemode=FullScreen
+}
 
 \newcommand\originalchapter{}
 \let\originalchapter\chapter % chktex 1

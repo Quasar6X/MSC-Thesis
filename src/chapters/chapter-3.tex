@@ -18,12 +18,12 @@ konfigurációt, a kód oldalán és arra is hogy milyen sémájú konfiguráci�
     kibővíteni. A konfigurációk előtti \textit{+} jelzi hogy a szekció kibővíti az adott konfigurációs értéket, nem
     pedig felülírja azt.
 
-    A~\ref{fig:section-hierarchy} ábra mutatja, hogyan lehet egy meglévő szekcióból konfigurációt örökölni, illetve
-    felülírni. Ha a program futás során a \textit{DEFAULT} szekciót választjuk akkor a konfigurációs elemeink értékei
-    rendre \verb|CFG1 = [1, 2]| és \verb|CFG2 = [3, 4]|. Ha a \textit{MY\_SECTION} szekciót választjuk akkor pedig,
-    \verb|CFG1 = [1, 2, 3]| és \verb|CFG2 = [5]|.
+    A \textbf{\ref{fig:section-hierarchy}. ábra} mutatja, hogyan lehet egy meglévő szekcióból konfigurációt örökölni,
+    illetve felülírni. Ha a program futás során a \textit{DEFAULT} szekciót választjuk akkor a konfigurációs elemeink
+    értékei rendre \verb|CFG1 = [1, 2]| és \verb|CFG2 = [3, 4]|. Ha a \textit{MY\_SECTION} szekciót választjuk akkor
+    pedig, \verb|CFG1 = [1, 2, 3]| és \verb|CFG2 = [5]|. \pagebreak
 
-    \begin{figure}
+    \begin{figure}[ht]
         \centering
         \begin{minted}{INI}
 [DEFAULT]
@@ -42,7 +42,9 @@ CFG2 =
         \caption{\label{fig:section-hierarchy} A szekció hierarchia konstrukció}
     \end{figure}
 
-    \pagebreak
+    \noindent
+    Példa egy teljes konfigurációs fájlra \textbf{\ref{fig:config-full}. ábra}.
+
     \subsection{A \textit{BuildOption} konfigurációk}
 
         A konfigurációs fájlban pár beállítástól eltekintve, a konfigurációs elemek egy-egy fordítóprogram kapcsolóhoz
@@ -60,11 +62,11 @@ CFG2 =
         hogyan fogja tudni hogy milyen teszteket futtasson?
 
         Erre ad megoldást a \textit{Suites} konfigurációs mező ahol fel kell sorolni a futtatni kívánt teszt
-        csomagokat. A teszt csomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden sorban
-        egy elérési útvonallal. Ezzel a mechanizmussal bármilyen teszt esetekből álló teszt csomag definiálható.
+        csomagokat. A tesztcsomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden sorban
+        egy elérési útvonallal. Ezzel a mechanizmussal bármilyen teszt esetekből álló tesztcsomag definiálható.
 
         A legnagyobb előnye ennek a formátumnak, hogy a keretrendszer követni tudja, hogy melyik teszt esetet futtatta
-        már. Így ha a teszt csomagok osztoznak egy-egy teszt eseten akkor a keretrendszer egyszerűen
+        már. Így ha a tesztcsomagok osztoznak egy-egy teszt eseten akkor a keretrendszer egyszerűen
         \textbf{behelyettesíti} a meglévő eredményt.
 
         Ezen mechanizmus adta az ötletet a projekt elnevezésére.
@@ -72,29 +74,62 @@ CFG2 =
     \subsection{A \textit{Matrix} és a \textit{Constraints}}
 
         Most, hogy már ki tudjuk választani a fordítóprogram számára megfelelő opciókat, és definiálni tudjuk a
-        futtatandó teszt csomagokat a kettő beállítás között kapcsolatot kell teremteni. Erre a kapcsolat teremtésre
+        futtatandó tesztcsomagokat a kettő beállítás között kapcsolatot kell teremteni. Erre a kapcsolat teremtésre
         szolgálnak a \textit{Matrix} és a \textit{Constraints} beállítások.
 
         A \textit{Matrix} beállításban fel kell sorolni az összes olyan \textit{BuildOption} konfigurációt amit
         futtatni szeretnénk.
 
-        A \textit{Constraints} beállításban adhatunk meg megszorításokat, hogy bizonyos teszt csomagokra csak bizonyos,
+        A \textit{Constraints} beállításban adhatunk meg megszorításokat, hogy bizonyos tesztcsomagokra csak bizonyos,
         kapcsolókat engedélyezzünk. Így a \textit{Matrix} által generált potenciálisan exponenciális kombinációkat
-        levághatóak, ha nem szükségesek. A szintaxist a következő \textit{EBNF}~\ref{fig:ebnf} nyelvtan írja le.
+        levághatóak, ha nem szükségesek. A szintaxist a következő \textbf{\ref{fig:bnf}. ábrán} látható \textit{BNF}
+        nyelvtan írja le.
 
         \begin{figure}[h]
-            \hspace*{-1.5in}
+            \hspace*{-1.5cm}
             \centering
-            \begin{grammar}
-                <constraint> ::= <suite> <build_option_constraint>+ %chktex 26
+            \begin{mdframed}[backgroundcolor=LightGray]
+                \begin{grammar}
+                    <constraint> ::= <suite> "&" <build-option-constraints> %chktex 18 chktex 26
 
-                <build_option_constraint> ::= "&" <id> %chktex 18 chktex 26
-                \alt "&" <build_option_with_value> %chktex 1 chktex 18
+                    <build-option-constraints> ::= <build-option-constraints> "&" <build-option> %chktex 18 chktex 26
+                    \alt <build_option> %chktex 1
 
-                <suite> ::= "*" %chktex 18 chktex 26
-                \alt <id> %chktex 1 chktex 18
+                    <build-option> ::= <id> %chktex 26
+                    \alt <id> ":" <id> %chktex 1 chktex 18
 
-                <id> ::= [a-zA-Z0-9_]+ %chktex 8 chktex 18 chktex 26
-            \end{grammar}
-            \caption{\label{fig:ebnf} A \textit{Constraints} kapcsoló nyelvtana}
+                    <suite> ::= "*" %chktex 18 chktex 26
+                    \alt <id> %chktex 1 chktex 18
+
+                    <id> ::= non empty string %chktex 26
+                \end{grammar}
+            \end{mdframed}
+            \caption{\label{fig:bnf} A \textit{Constraints} konfigurációk nyelvtana}
         \end{figure}
+
+        Tekintsük a \textbf{\ref{fig:example-constraint}. ábrán} látható példa konfigurációt, ahol feltételezzük hogy a
+        hivatkozott \textit{Suite} és a \textit{BuildOption} konfigurációk definiáltak.
+
+        \begin{figure}[h]
+            \centering
+            \begin{minted}{INI}
+CONSTRAINTS =
+    *&EXCEPTIONS
+    EXPRS&OPT_LEVEL:Oz
+    LOOPS&OPT_LEVEL:O1&BUILTIN
+            \end{minted}
+            \caption{\label{fig:example-constraint} Példa \textit{Constraints} konfigurációra}
+        \end{figure}
+
+        Ez a konfiguráció definíció szerint, rendre a következő megszorításokat fogja alkalmazni:
+
+        \begin{itemize}
+            \item Az \textbf{ÖSSZES} tesztcsomagból kiszűri az \textbf{EXCEPTIONS} kapcsoló bármely értékét.
+            \item Az \textbf{EXPRS} tesztcsomagból kiszűri az \textbf{OPT\_LEVEL} kapcsoló \textbf{Oz} értékét.
+            \item A \textbf{LOOPS} tesztcsomagból kiszűri az \textbf{OPT\_LEVEL} kapcsoló \textbf{O1} értékét és a
+                  \textbf{BUILTIN} kapcsoló bármely értékét.
+        \end{itemize}
+
+        \noindent
+        További konfigurációs elemek is elérhetőek ezzel a szintexissal. A teljesség igénye nélkül pár példa:
+        \textit{SKIPLISTS}, \textit{CFLAGS}, \textit{TIMEOUT_RUN}, \textit{TIMEOUT_COMPILE}.

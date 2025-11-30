@@ -26,9 +26,9 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
     a lokális futtatáshoz. Ezek a komponensek a \textit{Gekko}, a \textit{ConfigManager}, a \textit{SystemUnderTest}
     (továbbiakban \textit{Sut}), illetve a program kimenet szabványos formára hozásáért felelős \textit{Reporter}.
 
-    A felvázolt struktúrát ábrázolja az alábbi Venn-diagram~\ref{fig:kompdiag}.
+    A felvázolt struktúrát ábrázolja az alábbi Venn-diagram \textbf{\ref{fig:kompdiag}. ábra}. \pagebreak
 
-    \begin{figure}
+    \begin{figure}[ht]
         \centering
         \begin{tikzpicture}
             \begin{scope} [fill opacity=.3]
@@ -53,13 +53,11 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
         \caption{\label{fig:kompdiag} Szoftver komponens csoport diagram}
     \end{figure}
 
-    \newpage
-
     \subsection{A \textit{SuperSet} szoftver komponens}
 
         A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a
-        \textit{ConfigManager} szoftver komponens által előállított teszt csomagok futtatása, valamint a \textit{Gekko}
-        szoftver komponens által előállított \textit{fuzz} típusú teszt csomagok futtatása is. Továbbá a
+        \textit{ConfigManager} szoftver komponens által előállított tesztcsomagok futtatása, valamint a \textit{Gekko}
+        szoftver komponens által előállított \textit{fuzz} típusú tesztcsomagok futtatása is. Továbbá a
         \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolatatival és kizárásaival,
         így megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite}~\cite{sqlite} adatbázisban tárolja.
 
@@ -78,8 +76,8 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
     \subsection{A \textit{Gekko} szoftver komponens}
 
         A \textit{Gekko} szoftver komponens dinamikusan generál egy előre megadott mennyiségű \textit{fuzz} típusú
-        teszt csomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal
-        a működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a
+        tesztcsomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal a
+        működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a
         kiementét a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
         \textit{Csmith}~\cite{csmith} programot használja, azonban könnyen bővíthető más genráló programokkal is.
 

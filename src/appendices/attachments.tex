@@ -1,2 +1,51 @@
 \chapter*{Mellékletek}
 \vspace{2 cm}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minted}{INI}
+[DEFAULT]
+TRIPLE = aarch64-none-none-elf
+ARCH = ARMV8A
+RCB = COMPILE_LINK_RUN
+
+SUITES =
+    LOOPS
+    C99LANG
+    C99LIB
+    Cxx17LANG
+    Cxx17LIB
+
+EXCEPTIONS =
+    EX
+    NEX
+
+BUILTIN =
+    BI
+    NBI
+
+MATRIX =
+    ARCH
+    EXCEPTIONS
+    BUILTIN
+
+SKIPLISTS =
+    *&@skiplist_libcxx_atomic
+    *&@skiplist_libcxx_chrono
+
+CONSTRAINTS =
+    LOOPS&BUILTIN&EXCEPTIONS
+    C99LANG&EXCEPTIONS
+    C99LIB&EXCEPTIONS
+
+TIMEOUT_COMPILE = *&240
+
+CFLAGS =
+    *&-Wall
+    *&-ffunction-sections
+    *&-fdata-sections
+    *&-fsized-deallocation
+    *&-fno-fast-math
+    \end{minted}
+    \caption{\label{fig:config-full} Példa egy konfigurációs fájlra}
+\end{figure}
