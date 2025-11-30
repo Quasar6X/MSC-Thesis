@@ -4,23 +4,21 @@
 \begin{figure}[ht]
     \hspace*{-1cm}
     \centering
-    \begin{mdframed}[backgroundcolor=LightGray]
-        \begin{grammar}
-            <constraint> ::= <suite> "&" <build-option-constraints> %chktex 18 chktex 26
+    \begin{minted}{BNF}
+<constraint>               ::= <suite> "&" <build-option-constraints>
 
-            <build-option-constraints> ::= <build-option-constraints> "&" <build-option> %chktex 18 chktex 26
-            \alt <build_option> %chktex 1
+<build-option-constraints> ::= <build-option-constraints> "&" <build-option>
+                             | <build_option>
 
-            <build-option> ::= <id> %chktex 26
-            \alt <id> ":" <id> %chktex 1 chktex 18
+<build-option>             ::= <id>
+                             | <id> ":" <id>
 
-            <suite> ::= "*" %chktex 18 chktex 26
-            \alt <id> %chktex 1 chktex 18
+<suite>                    ::= "*"
+                             | <id>
 
-            <id> ::= non empty string %chktex 26
-        \end{grammar}
-    \end{mdframed}
-    \caption{\label{fig:bnf} A \textit{Constraints} konfigurációk nyelvtana}
+<id>                       ::= non empty string
+    \end{minted}
+    \caption{\label{fig:bnf} A \textit{Constraints} konfigurációk nyelvtana \textbf{Backus-Naur-formában}}
 \end{figure}
 
 \begin{figure}[ht]

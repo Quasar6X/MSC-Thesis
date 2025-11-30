@@ -1,14 +1,16 @@
 \documentclass[a4paper,12pt]{report}
+\setcounter{secnumdepth}{4}
 \setlength{\headheight}{15pt}
 \usepackage[T1]{fontenc}
 \usepackage[nomath]{lmodern}
 \def\magyarOptions{defaults=hu-min}
 \usepackage[magyar]{babel}
 \usepackage{amsthm, amssymb, amsmath}
+\usepackage{booktabs}
+\usepackage{diagbox}
 \usepackage{csquotes}
 \usepackage{enumerate, graphicx, xcolor}
 \usepackage[dvipsnames]{xcolor}
-\usepackage{mdframed}
 \definecolor{LightGray}{gray}{0.9}
 \usepackage{minted}
 \usemintedstyle{emacs}
@@ -22,8 +24,6 @@
     breaklines
 }
 \usepackage{tikz}
-\usepackage{syntax}
-\setlength{\grammarindent}{14em}
 
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
@@ -123,6 +123,9 @@
 
 \newpage
 \input{chapters/chapter-3.tex}
+
+\newpage
+\input{chapters/chapter-4.tex}
 
 \newpage
 \input{appendices/bibliography.tex}

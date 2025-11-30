@@ -1,6 +1,6 @@
-\chapter{A \textit{ConfigManager}}
+\chapter{A \textit{ConfigManager}}\label{chp:config-manager}
 
-Ahogy azt a~\ref{intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel a a
+Ahogy azt a~\ref{sec:intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel a a
 konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek, arra hogy hogyan értelmezi a keretrendszer a
 konfigurációt, a kód oldalán és arra is, hogy milyen formátumban várja a konfigurációt.
 
@@ -63,10 +63,10 @@ CFG2 =
 
         Erre ad megoldást a \textit{Suites} konfigurációs mező ahol fel kell sorolni a futtatni kívánt teszt
         csomagokat. A tesztcsomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden sorban
-        egy elérési útvonallal. Ezzel a mechanizmussal bármilyen teszt esetekből álló tesztcsomag definiálható.
+        egy elérési útvonallal. Ezzel a mechanizmussal bármilyen tesztesetekből álló tesztcsomag definiálható.
 
-        A legnagyobb előnye ennek a formátumnak, hogy a keretrendszer követni tudja, hogy melyik teszt esetet futtatta
-        már. Így ha a tesztcsomagok osztoznak egy-egy teszt eseten akkor a keretrendszer egyszerűen
+        A legnagyobb előnye ennek a formátumnak, hogy a keretrendszer követni tudja, hogy melyik tesztesetet futtatta
+        már. Így ha a tesztcsomagok osztoznak egy-egy teszteseten akkor a keretrendszer egyszerűen
         \textbf{behelyettesíti} a meglévő eredményt.
 
         Ezen mechanizmus adta az ötletet a projekt elnevezésére.
@@ -111,7 +111,7 @@ CONSTRAINTS =
 
         \noindent
         További konfigurációs elemek is elérhetőek ezzel a szintexissal. A teljesség igénye nélkül pár példa:
-        \textit{SKIPLISTS}, \textit{CFLAGS}, \textit{TIMEOUT_RUN}, \textit{TIMEOUT_COMPILE}.
+        \textit{SKIPLISTS}, \textit{CFLAGS}, \textit{TIMEOUT\_RUN}, \textit{TIMEOUT\_COMPILE}.
 
 \section{A konfiguráció beolvasása}
 
@@ -130,7 +130,7 @@ CONSTRAINTS =
         A beolvasás után a típus hozzárendelést a \textit{ConfigGenerator} alkomponens végzi. Bemenetében két
         \textit{Mapping} típust kap. Az első sztrigekhez rendeli a tesztcsomagokat, a második pedig szintén
         sztringekhez rendeli a \textit{BuildOption} beállításokat. Ezek alapján tudja legyártani a futtatáshoz a
-        megfelelő tesztcsomag objektumot \textit{create_target} függvénnyel, és futtatási kapcsolókat.
+        megfelelő tesztcsomag objektumot \textit{create\_target} függvénnyel, és futtatási kapcsolókat.
 
         A \textit{ConfigGenerator} generikus mind a kettő említett típusában. Ez azért fontos mert különböző
         konfigurációk különböző konkrét implementációkat használnak, így a hívó oldalán megjelenő objektumok típusa nem
@@ -154,8 +154,8 @@ class ConfigGenerator[T: Target, O: Option]:
             \caption{\label{fig:config-generator} A generikus \textit{ConfigGenerator} definíciója}
         \end{figure}
 
-        A kapcsolók szűrése a \textit{filter_configs} függbényben történik. A szűrés eredménye a kimenő \textit{Target}
-        objektum \textit{configs} mezőjében kerül eltárolásra.
+        A kapcsolók szűrése a \textit{filter\_configs} függbényben történik. A szűrés eredménye a kimenő
+        \textit{Target} objektum \textit{configs} mezőjében kerül eltárolásra.
 
 \section{Összegzés}
 
