@@ -14,7 +14,7 @@
     ],
     "latex-workshop.latex.autoBuild.run": "never",
     "latex-workshop.latex.autoClean.run": "never",
-    "latex-workshop.latex.recipe.default": "latexmk",
+    "latex-workshop.latex.recipe.default": "Build with latexmk",
     "latex-workshop.latex.recipes": [
         {
             "name": "Build with latexmk",
