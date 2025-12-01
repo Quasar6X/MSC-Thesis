@@ -8,6 +8,7 @@ FROM ubuntu:25.10
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 RUN apt-get update \
     && apt-get -y install --no-install-recommends \
     apt-utils=3.1.6* \
@@ -22,6 +23,8 @@ RUN apt-get update \
     texlive-latex-extra=2024.20250309* \
     texlive-bibtex-extra=2024.20250309* \
     texlive-lang-all=2024.20250309* \
+    ttf-mscorefonts-installer=3.8.1* \
+    fontconfig=2.15.0* \
     biber=2.20* \
     chktex=1.7.9* \
     latexmk=1:4.87* \
@@ -32,7 +35,9 @@ RUN apt-get update \
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    # Update font cache
+    && fc-cache -fv
     
 # latexindent modules
 RUN curl -L http://cpanmin.us | perl - App::cpanminus \
