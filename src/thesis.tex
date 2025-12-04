@@ -9,6 +9,8 @@
 \usepackage{booktabs}
 \usepackage{diagbox}
 \usepackage{csquotes}
+\renewcommand{\mkbegdispquote}[2]{\openautoquote}
+\renewcommand{\mkenddispquote}[2]{\closeautoquote#1#2}
 \usepackage{enumerate, graphicx, xcolor}
 \usepackage[dvipsnames]{xcolor}
 \definecolor{LightGray}{gray}{0.9}
@@ -24,6 +26,7 @@
     breaklines
 }
 \usepackage{tikz}
+\usepackage{rotating}
 
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
@@ -129,6 +132,9 @@
 
 \newpage
 \input{chapters/chapter-5.tex}
+
+\newpage
+\input{chapters/chapter-6.tex}
 
 \newpage
 \input{appendices/bibliography.tex}

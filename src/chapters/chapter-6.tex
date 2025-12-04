@@ -1,0 +1,122 @@
+\chapter{A \textit{Reporter} komponens}
+
+A \textit{Reporter} szoftver komponens felelős a teszt keretrendszer kimenetét különböző formátumokra hozni.
+Kiemelendő, hogy ez a komponens egy külön parancsosori futtatható a teszt keretrendszertől. Ezt az architektúrális
+döntés a \emph{Unix filozófia} alapján hoztam meg, miszerint:
+
+\begin{foreigndisplaycquote}{american}{bst-journal}
+    Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding
+    new features.
+\end{foreigndisplaycquote}
+
+A~\ref{sec:intro-reporter} fejezetben említett két kimeneti formátumot támogatja a komponens, amelyek rendre:
+
+\begin{itemize}
+    \item Humán olvasható, \textit{HTML} jelentés.
+    \item Harmadik féltől számrazó programok által ovlasható \textit{JUnit XML}.
+\end{itemize}
+
+A kimeneti formátumok kiválasztásánál először csak a \textit{JUnit XML} lehetőséget vettem figyelembe. Azonban hamar rá
+kellett hogy jöjjek, hogy egy szoftver eszköz mint a \textit{SuperSet} teszt keretrendszer, csak akkor teremt értéket
+ha a tesztelők könnyen vizualizálni tudják a kimenetét. Ha a \textit{HTML} kimenet nem valósult volna meg, akkor a
+keretrendszer felhasználói kénytelenek lettek volna harmadik féltől számazó szoftvereket alkalmazni. Vagy az
+\textit{SQLite} adatbázis megnyitásához, és lekérdezéséhez, vagy a \textit{JUnit XML} vizsualizálásához.
+
+A két formátum kezelésére két külön-külön álló szoftver komponenst implementáltam, ezek a \textit{HTMLReporter} és a
+\textit{JXmlReporter} komponensek. A komponensek közel azonos adaton dolgoznak.
+
+Mindkét komponensnek szüksége van egy aggregált statisztikára ez a \textit{Stats} típus. Ez a típus gyakorlatilag egy
+összefoglalót ad az egész teszt futtatásról. Az összefoglalóban szerepel az összes konfigurációval kiválasztott
+teszteset száma, valamint hogy ezek közül mennyi teszteset volt sikeres, sikertelen, vagy kihagyott. Ezenkívül a
+futtatás idejét is tartalmazza másodpercben mérve. A \textbf{\ref{fig:stats-implementation}. ábrán} látható a
+\textit{Stats} típus.
+
+\begin{figure}[ht]
+    \centering
+    \begin{minted}{python}
+@dataclass(slots=True)
+class Stats(tuple[float, int, int, int, int, int]):
+    time: float = 0
+    passes: int = 0
+    fails: int = 0
+    errors: int = 0
+    skipped: int = 0
+    tests: int = 0
+    \end{minted}
+    \caption{\label{fig:stats-implementation} A \textit{Stats} típus implementációja}
+\end{figure}
+
+\newpage
+\section{A \textit{JXmlReporter} komponens}
+
+    A \textit{JxmlReporter} komponens mind működésében mind implementációjában szerényebb mint a \textit{HTMLReporter}
+    társa. Ez a tény gyakorlatilag a formátum egyszerűségéből adódik.
+
+    A formátumot először az \emph{Apache Ant\textsuperscript{\texttrademark}}~\cite{ant} használta, és
+    szabványosította, majd \textit{de-facto} szabvány lett az automata szoftvertesztek eredményeinek tárolására.
+
+    A \textbf{\ref{fig:jxml-report}. ábrán} látható példa egy a \textit{SuperSet} teszt keretrendszer által generált
+    \textit{JUnit XML-re}.
+
+    \begin{figure}[ht]
+        \centering
+        \begin{minted}{xml}
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="SuperSet" tests="3" errors="0" failures="0" skipped="0" time="1.164">
+    <testsuite name="C99LANG-ARMV8-O0" tests="1" errors="0" failures="0" skipped="0" time="0.291">
+        <test_case name="2/1/1/2/t01" time="0.291" />
+    </testsuite>
+    <testsuite name="C99LIB-ARMV8-O0" tests="1" errors="0" failures="0" skipped="0" time="0.416">
+        <test_case name="4/1/2/t33fsnofloat" time="0.416" />
+    </testsuite>
+    <testsuite name="LOOPS-ARMV8-O0" tests="1" errors="0" failures="0" skipped="0" time="0.457">
+        <test_case name="optimize/s314/ts314intrestrict" time="0.457" />
+    </testsuite>
+</testsuites>
+        \end{minted}
+        \caption{\label{fig:jxml-report} Példa a \textit{JUnit XML} jelentésre}
+    \end{figure}
+
+\section{A \textit{HTMLReporter} komponens}
+
+    A könnyű áttekintés érdekében az eredmények kategorizálásra kerülnek. A \textit{HTMLReporter} komponens hét
+    különböző kategóriát különböztet meg. Ezek a következők:
+
+    \begin{itemize}
+        \item \textit{SKIPPED}: kihagyott teszteset.
+        \item \textit{CFAIL}: fordítási hibás teszteset.
+        \item \textit{XCFAIL}: imsert fordítási hibás teszteset.
+        \item \textit{CPASS}: fordítási sikeres teszteset.
+        \item \textit{RFAIL}: futtatási hibás teszteset.
+        \item \textit{XRFAIL}: ismert futtatási hibás teszteset.
+        \item \textit{RPASS}: futtatási sikeres teszteset.
+    \end{itemize}
+
+    A \textit{HTMLReporter} komponens struktúráltan prezentálja az információt a felhasználó felé. A struktúra egy fába
+    van rendezve.
+
+    Az első gyökér elem, egy fejléc van, ami felsorolja a teljes futásra vonatkozó statisztikákat. Ahogy haladunk
+    beljebb a listában, szintén minden elem egy statisztika fejléccel kezdődik, azonban az a fejléc csak az arra a
+    lista elemre szűrt statisztikákat jeleníti meg.
+
+    A lista elemek a könnyű vizuális keresés érdekében, szemantikusan színezettek, a kategóriák alapján. Erősségi
+    sorrend szerint, pirossal ha sikertelen teszteset van a kategóriában, zölddel ha minden teszteset sikeres, és
+    sárgával ha minden teszteset ki lett hagyva.
+
+    A lista elemek ezután a következő sorrendben ágyazódnak egymásba:
+
+    \begin{enumerate}
+        \item A tesztcsomag neve.
+        \item A \textit{Target} neve és a hozzátartozó konfiguráció.
+        \item A hét kategória bontás.
+        \item A kategórián belül az eredményeket mutató táblázat.
+    \end{enumerate}
+
+    A fa szerkezet leveleiben lévő táblázatok, a kategóriájukna megfelelő oszlopokat tartalmaznak. Általánosan
+    elmondható, hogy minden táblázatban van egy \emph{név} oszlop, hogy a teszteset azonosítható legyen.
+
+    A sikeresen futott teszteseteknél a futtatás ideje látható. A kihagyott teszteseteknél a lista ami alapján a teszt
+    ki lett hagyva. A sikertelen teszteseteknél a futtatás ideje, a program kimenete mind az \textit{STDOUT-ra} és
+    \textit{STDERR-re}, valamint egy konfigurációs fájl amivel reprodukálni lehet a bukást. A
+    \textbf{\ref{fig:html-report-passes}.~\ref{fig:html-report-skips}. és~\ref{fig:html-report-errors}. ábrák}
+    bemutatják a különböző táblázat formátumokat egy \textit{HTML} jelentés részletén.
