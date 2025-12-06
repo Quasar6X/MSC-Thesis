@@ -38,7 +38,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     # Update font cache
     && fc-cache -fv
-    
+
 # latexindent modules
 RUN curl -L http://cpanmin.us | perl - App::cpanminus \
     && cpanm Log::Dispatch::File \
@@ -48,6 +48,10 @@ RUN curl -L http://cpanmin.us | perl - App::cpanminus \
 
 # Dockerfile linter
 COPY --from=hadolint/hadolint:v2.14.0-debian /bin/hadolint /bin/hadolint
+
+# tikz-uml extra package
+COPY tikz-uml.sty /usr/share/texlive/texmf-dist/tex/latex/tikz-uml/
+RUN texhash
 
 ENV DEBIAN_FRONTEND=dialog \
     LANG=C.UTF-8 \
