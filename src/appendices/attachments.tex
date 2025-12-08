@@ -1,10 +1,9 @@
 \chapter*{Mellékletek}
-\vspace{2 cm}
 
 \begin{figure}[ht]
     \hspace*{-1cm}
     \centering
-    \begin{minted}{BNF}
+    \begin{minted}[fontsize=\scriptsize]{BNF}
 <constraint>               ::= <suite> "&" <build-option-constraints>
 
 <build-option-constraints> ::= <build-option-constraints> "&" <build-option>
@@ -23,7 +22,7 @@
 
 \begin{figure}[ht]
     \centering
-    \begin{minted}{python}
+    \begin{minted}[fontsize=\scriptsize]{python}
 class ConfigManager:
     def __init__(self, config_file: "StrOrPath", section: str = "DEFAULT") -> None: ...
     def get_item(self, item: str, default: str | None = None) -> str: ...
@@ -40,6 +39,34 @@ class ConfigManager:
     def get_list_default(self, item: str, default: str | None = None, sep: str | None = None) -> list[str]: ...
     \end{minted}
     \caption{\label{fig:config-manager} A \textit{ConfigManager} publikus interfésze}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minted}{INI}
+[DEFAULT]
+COMPILE_TIMEOUT = 5
+RUN_TIMEOUT = 5
+PREFIX = test_
+HOST_COMPILERS =
+    HOST_GCC
+    HOST_CLANG_15
+
+[CSMITH]
+TIMEOUT = 5
+OPTIONS = --no-argc --max-array-dim 5 --max-array-len-per-dim 20 --no-longlong --no-packed-struct --max-block-size 1
+
+[HOST_GCC]
+COMPILER = gcc
+COMPILE_FLAGS = -std=c99 -Wno-narrowing -Wno-unused-value -fstrict-aliasing -Wformat
+LINK_FLAGS =
+
+[HOST_CLANG_15]
+COMPILER = clang-15
+COMPILE_FLAGS = -std=c99 -Wno-narrowing -Wno-unused-value -fstrict-aliasing -Wformat
+LINK_FLAGS =
+        \end{minted}
+    \caption{\label{fig:gekko-config} Egy példa \textit{Gekko} konfigurációs fájl}
 \end{figure}
 
 \begin{figure}[ht]
