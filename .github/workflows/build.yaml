@@ -30,13 +30,13 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: 'main'
-          fetch-depth: 2
+          fetch-depth: 0
           fetch-tags: true
 
       - name: Check for Docker changes
         id: changes
         run: |
-          if git diff --name-only $(git describe --abbrev=0 --tags $(git describe --abbrev=0)^) $(git describe --abbrev=0) | grep '^\.devcontainer/Dockerfile'; then
+          if git diff --name-only $(git describe --abbrev=0 --tags $(git describe --abbrev=0)^) $(git describe --abbrev=0) | grep -P '^(\.devcontainer/(?!devcontainer\.json).+)|(\.github/workflows/build.yaml)'; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -68,6 +68,7 @@ jobs:
         with:
           push: true
           file: .devcontainer/Dockerfile
+          context: .devcontainer
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
