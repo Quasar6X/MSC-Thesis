@@ -1,19 +1,19 @@
-\chapter{Szoftver architektútra}
+\chapter{Szoftver architektúra}
 
-Ebben a fejezetben egy általános áttekintést adok a \textit{SuperSet} felépítéséről, a projekt struktúráról és a
+Ebben a fejezetben egy általános áttekintést adok a \textit{SuperSet} felépítéséről, a projekt struktúrájáról és a
 fejlesztést támogató folyamatokról.
 
-A \textit{SuperSet} egy elosztott tesz keretrendszser, amely Python 3.12~\cite{python312} nyelvben implementált. A
-verzió kezelés Git segítségével történt. A \textit{SuperSet} mind logikailag mind modul szinten struktúrált. Ez a
+A \textit{SuperSet} egy elosztott tesz keretrendszer, amely Python 3.12~\cite{python312} nyelvben implementált. A
+verzió kezelés Git segítségével történt. A \textit{SuperSet} mind logikailag, mind modul szinten struktúrált. Ez a
 struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntartását és az implementációs részletek elrejtését.
 
-\section{A projekt felépítés}
+\section{A projekt felépítése}
 
-    Ebben a fejezetben röviden ismertetem a szoftver komponenseket amelyek felépítik a \textit{SuperSet} elosztott
-    teszt keretrendszert alkamazást. Mélyebb működésükre, konkrét implementációs részleteikre, és az azokat alátámasztó
-    indoklásokora a komponensek saját fejezeteiben fogok kitérni.
+    Ebben a fejezetben röviden ismertetem a szoftver komponenseket, amelyek felépítik a \textit{SuperSet} elosztott
+    teszt keretrendszert alkalmazást. Mélyebb működésükre, konkrét implementációs részleteikre, és az azokat
+    alátámasztó indoklásokra a komponensek saját fejezeteiben fogok kitérni.
 
-    A teszt keretrendszer hét fő szoftver komponensből áll amelyek két \emph{nem} diszjunkt halmazba sorolhatók.
+    A teszt keretrendszer hét fő szoftver komponensből áll, amelyek két \emph{nem} diszjunkt halmazba sorolhatók.
 
     Az első halmaz a lokális futtatásért felelős szoftver komponenseket tartalmazza. Ebbe a halmazba tartozik a
     \textit{run.py} fájl által implementált \textit{SuperSet} szoftver komponens, amely névadója lett a projektnek.
@@ -22,7 +22,7 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
     \textit{client.py} fájl által implementált \textit{SuperSetConsumer} és a \textit{server.py} által implementált
     \textit{SuperSetProducer} szoftver komponensek.
 
-    A két halmaz metszetében azok a szoftver komponensek szerepelnek amelyek elengedhetetlenek mind az elosztott, mind
+    A két halmaz metszetében azok a szoftver komponensek szerepelnek, amelyek elengedhetetlenek mind az elosztott, mind
     a lokális futtatáshoz. Ezek a komponensek a \textit{Gekko}, a \textit{ConfigManager}, a \textit{SystemUnderTest}
     (továbbiakban \textit{Sut}), illetve a program kimenet szabványos formára hozásáért felelős \textit{Reporter}.
 
@@ -58,12 +58,12 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
         A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a
         \textit{ConfigManager} szoftver komponens által előállított tesztcsomagok futtatása, valamint a \textit{Gekko}
         szoftver komponens által előállított \textit{fuzz} típusú tesztcsomagok futtatása is. Továbbá a
-        \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolatatival és kizárásaival,
+        \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolataival és kizárásaival,
         így megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite}~\cite{sqlite} adatbázisban tárolja.
 
     \subsection{A \textit{SuperSetProducer} és a \textit{SuperSetConsumer} szoftver komponensek}\label{sec:intro-superset-prod-cons}
 
-        Ez a két komponens felelős az elosztott működésért.
+        Ez a két komponens felelős az elosztott működés megvalósításáért.
 
         A \textit{SuperSetProducer} a szerver alkalmazás által kezelt sorba fogja rakni a kért tesztcsomagokat.
         Gyakorlatilag a \textit{SuperSet} szoftver komponens által végzett munka első részét végzi, tehát a
@@ -78,8 +78,8 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
         A \textit{Gekko} szoftver komponens dinamikusan generál egy előre megadott mennyiségű \textit{fuzz} típusú
         tesztcsomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal a
         működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a
-        kiementét a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
-        \textit{Csmith}~\cite{csmith} programot használja, azonban könnyen bővíthető más genráló programokkal is.
+        kiemenetét a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
+        \textit{Csmith}~\cite{csmith} programot használja, azonban könnyen bővíthető más generáló programokkal is.
 
     \subsection{A \textit{ConfigManager} szoftver komponens}\label{sec:intro-config-manager}
 
@@ -107,6 +107,6 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
 
 \section{Összegzés}\label{sec:ch2-summary}
 
-    Most, hogy megismerkedtünk röviden a teszt keretrendszert felépítő szoftver komopnensekkel, a következő
+    Most, hogy megismerkedtünk röviden a teszt keretrendszert felépítő szoftver komponensekkel, a következő
     fejezetekben kitérek a mélyebb implementációs részletekre. A komponenseket az alkalmazáson átfolyó adatiránynak
     megfelelő sorrendben mutatom be.

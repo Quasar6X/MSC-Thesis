@@ -1,7 +1,7 @@
 \chapter{A \textit{Reporter} komponens}\label{chp:reporter}
 
 A \textit{Reporter} szoftver komponens felelős a teszt keretrendszer kimenetét különböző formátumokra hozni.
-Kiemelendő, hogy ez a komponens egy külön parancsosori futtatható a teszt keretrendszertől. Ezt az architektúrális
+Kiemelendő, hogy ez a komponens egy külön parancssori futtatható a teszt keretrendszertől. Ezt az architekturális
 döntés a \emph{Unix filozófia} alapján hoztam meg, miszerint:
 
 \begin{foreigndisplaycquote}{american}{bst-journal}
@@ -13,14 +13,14 @@ A~\ref{sec:intro-reporter} fejezetben említett két kimeneti formátumot támog
 
 \begin{itemize}
     \item Humán olvasható, \textit{HTML} jelentés.
-    \item Harmadik féltől számrazó programok által ovlasható \textit{JUnit XML}.
+    \item Harmadik féltől származó programok által olvasható \textit{JUnit XML}.
 \end{itemize}
 
 A kimeneti formátumok kiválasztásánál először csak a \textit{JUnit XML} lehetőséget vettem figyelembe. Azonban hamar rá
 kellett hogy jöjjek, hogy egy szoftver eszköz mint a \textit{SuperSet} teszt keretrendszer, csak akkor teremt értéket
 ha a tesztelők könnyen vizualizálni tudják a kimenetét. Ha a \textit{HTML} kimenet nem valósult volna meg, akkor a
-keretrendszer felhasználói kénytelenek lettek volna harmadik féltől számazó szoftvereket alkalmazni. Vagy az
-\textit{SQLite} adatbázis megnyitásához, és lekérdezéséhez, vagy a \textit{JUnit XML} vizsualizálásához.
+keretrendszer felhasználói kénytelenek lettek volna harmadik féltől származó szoftvereket alkalmazni. Vagy az
+\textit{SQLite} adatbázis megnyitásához, és lekérdezéséhez, vagy a \textit{JUnit XML} vizualizálásához.
 
 A két formátum kezelésére két külön-külön álló szoftver komponenst implementáltam, ezek a \textit{HTMLReporter} és a
 \textit{JXmlReporter} komponensek. A komponensek közel azonos adaton dolgoznak.
@@ -85,14 +85,14 @@ class Stats(tuple[float, int, int, int, int, int]):
     \begin{itemize}
         \item \textit{SKIPPED}: kihagyott teszteset.
         \item \textit{CFAIL}: fordítási hibás teszteset.
-        \item \textit{XCFAIL}: imsert fordítási hibás teszteset.
+        \item \textit{XCFAIL}: ismert fordítási hibás teszteset.
         \item \textit{CPASS}: fordítási sikeres teszteset.
         \item \textit{RFAIL}: futtatási hibás teszteset.
         \item \textit{XRFAIL}: ismert futtatási hibás teszteset.
         \item \textit{RPASS}: futtatási sikeres teszteset.
     \end{itemize}
 
-    A \textit{HTMLReporter} komponens struktúráltan prezentálja az információt a felhasználó felé. A struktúra egy fába
+    A \textit{HTMLReporter} komponens strukturáltan prezentálja az információt a felhasználó felé. A struktúra egy fába
     van rendezve.
 
     Az első gyökér elem, egy fejléc van, ami felsorolja a teljes futásra vonatkozó statisztikákat. Ahogy haladunk
@@ -112,11 +112,11 @@ class Stats(tuple[float, int, int, int, int, int]):
         \item A kategórián belül az eredményeket mutató táblázat.
     \end{enumerate}
 
-    A fa szerkezet leveleiben lévő táblázatok, a kategóriájukna megfelelő oszlopokat tartalmaznak. Általánosan
+    A fa szerkezet leveleiben lévő táblázatok, a kategóriájuknak megfelelő oszlopokat tartalmaznak. Általánosan
     elmondható, hogy minden táblázatban van egy \emph{név} oszlop, hogy a teszteset azonosítható legyen.
 
     A sikeresen futott teszteseteknél a futtatás ideje látható. A kihagyott teszteseteknél a lista ami alapján a teszt
     ki lett hagyva. A sikertelen teszteseteknél a futtatás ideje, a program kimenete mind az \textit{STDOUT-ra} és
-    \textit{STDERR-re}, valamint egy konfigurációs fájl amivel reprodukálni lehet a bukást. A
+    \textit{STDERR-re}, valamint egy konfigurációs fájl amivel reprodukálni lehet a bukást. A mellékletekben található
     \textbf{\ref{fig:html-report-passes}.~\ref{fig:html-report-skips}. és~\ref{fig:html-report-errors}. ábrák}
     bemutatják a különböző táblázat formátumokat egy \textit{HTML} jelentés részletén.

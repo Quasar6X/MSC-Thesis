@@ -1,8 +1,8 @@
 \chapter{A \textit{SystemUnderTest}}
 
 A \textit{SystemUnderTest}, vagy röviden \textit{Sut}, a teszt keretrendszer interakcióját valósítja meg a tesztelés
-alatt álló fordítóprogrammal. Ez a komponens lehetőséget ad fordítóprgram futtatását személyre szabni. A különböző
-\textit{Sut} implementációk egy bővítmény betöltő rendszeren keresztül válnak elérhetőve a teszt keretrendszer számára.
+alatt álló fordítóprogrammal. Ez a komponens lehetőséget ad fordítóprogram futtatását személyre szabni. A különböző
+\textit{Sut} implementációk egy bővítmény betöltő rendszeren keresztül válnak elérhetővé a teszt keretrendszer számára.
 
 \section{A \textit{Sut} függvények}
 
@@ -39,10 +39,10 @@ class Sut(ABC):
     transzformáció a paramétereken, de egy kanonikus implementáció csak az argumentumok megfelelő sorrendjét állítja
     elő.
 
-    A harmadik \textit{link} lépésben a szerkesztés, \textit{(idegen szóval linkelés)} történik. Itt ad lehetőseg a
-    rendszer a fordítóprogram szerkeszőjének parancssori argumentumait beállítani.
+    A harmadik \textit{link} lépésben a szerkesztés, \textit{(idegen szóval linkelés)} történik. Itt ad lehetőség a
+    rendszer a fordítóprogram szerkesztőjének parancssori argumentumait beállítani.
 
-    A negyedik \textit{run} lépésben a fordítoprgram kimenetét lehet futtatni egy arra alkalmas szimultáro programban,
+    A negyedik \textit{run} lépésben a fordítoprogram kimenetét lehet futtatni egy arra alkalmas szimulátor programban,
     vagy akár a végrehajtó gépen direktben.
 
     Fontos kiemelni, hogy bár ezek a függvények egymás után vannak végrehajtva, nincs megkötve hogy a tényleges
@@ -50,13 +50,13 @@ class Sut(ABC):
 
 \section{A \textit{CacheTarget} rendszer}
 
-    A \textit{CacheTarget} rendszer lehetőséget ad a \textit{Sutok} \textit{run} függvényei számára hogy eredményeiket
+    A \textit{CacheTarget} rendszer lehetőséget ad a \textit{Sutok} \textit{run} függvényei számára, hogy eredményeiket
     egy gyorsítótárba helyezzék. Ez a gyorsítótár gyakorlatilag egy \textit{SQLite} adatbázis ahol egy kalkulált
     \textit{hashhez} hozzá van rendelve a futás eredménye.
 
     A rendszer olyan fordítóprogramokkal működik amelyek kimenetében \textit{ELF} formátumú tárgykódot generálnak. A
     rendszer megvizsgálja a kimeneti \textit{ELF} fájl fejlécét és szegmenseit és aggregálja a bájtokat. Ehhez az
-    aggregációhioz még hozzáveszi a fordítoprgram bementi argumentumai és a \textit{STDIN} bementére érkező bájtokat,
+    aggregációihoz még hozzáveszi a fordítoprogram bementi argumentumai és a \textit{STDIN} bemenetére érkező bájtokat,
     majd a végeredményből egy \textit{SHA-512 hasht}~\cite{sha512} generál.
 
     Az adatbázis ezt a \textit{hasht} és futáseredményt az alábbi \textbf{\ref{fig:cache-schema}. ábrán} látható
@@ -85,7 +85,7 @@ class Sut(ABC):
     \end{figure}
 
     A rendszer előnye, hogy a sokáig tartó futtatandó tesztesetek futásidejét drasztikusan tudja csökkenteni.
-    Kifejezetten akkor a leghasznosabb ha a kimeneti \textit{ELF} futtatható szimulátroban fut, mert a szimulátorok
+    Kifejezetten akkor a leghasznosabb ha a kimeneti \textit{ELF} futtatható szimulátorban fut, mert a szimulátorok
     természetükből adódóan lassabbak mint egy natív futtatás.
 
     A rendszer hátránya azonban az, hogy az elosztott futtatás során a kliensek nem osztják meg a gyorsítótáraikat
@@ -97,7 +97,7 @@ class Sut(ABC):
 
 \section{A bővítmény rendszer}
 
-    A \textit{Sut} komponensek dinamikusan kerülnek betöltésre. Ez lehetővé teszi, hogy a teszt keretrendszer csomagán
+    A \textit{Sut} komponensek dinamikusan kerülnek betöltésre. Ez lehetővé teszi, hogy a teszt keretrendszer csomagján
     kívülről is definiálható legyen egy \textit{Sut}. Ez a folyamat két lépésből áll, először regisztrálni kell a
     bővítményeket, majd be kell őket tölteni a \textit{Pythonban} szabványos \textit{importlib} rendszeren keresztül
 
@@ -106,7 +106,7 @@ class Sut(ABC):
         Ennek megvalósítására a \textit{Python} nyelv által nyújtott \textit{metaclass} konstrukciót alkalmazta.
 
         A \textit{Python metclassok} egy fajta futásidejű formái a metaprogramozásnak, tehát futásidőben lehet a
-        típusokat manipluálni. A bővítmény rendszer úgy használja fel ezt a konstrukciót, hogy amikor egy \textit{Sut}
+        típusokat manipulálni. A bővítmény rendszer úgy használja fel ezt a konstrukciót, hogy amikor egy \textit{Sut}
         implementáció örököl a \textit{Sut} ősosztályból, akkor az ősosztály feljegyzi azt a típust egy asszociatív
         adatstruktúrába.
 
@@ -135,7 +135,7 @@ class Sut(ABC):
     \subsection{Bővítmény betöltés}
 
         A bővítmény betöltés a \textit{SutPluginLoader} osztályon keresztül történik. A bővítmény kezelő a bejövő modul
-        mappájában egy \textit{ssplugin.py} nevű fájlt keres. Mivel a bővítmények szabványos \textit{Python} comagok
+        mappájában egy \textit{ssplugin.py} nevű fájlt keres. Mivel a bővítmények szabványos \textit{Python} csomagok
         így nem elég csupán az elérési útvonalát ismerni a bővítmény fájlnak, hanem végre is kell hajtani azt.
 
         Erre többek között azért van szükség mert a \textit{Python} dinamikus így ameddig egy fájl nincs betöltve,
@@ -174,7 +174,7 @@ class SutPluginLoader:
     Összességében a \textit{SystemUnderTest} egy nagyon funkciókban gazdag alrendszere a teszt keretrendszernek. A
     gyorsítótár implementációját leszámítva, az alkotó komponensei, koncepciójukat tekintve generikusak.
 
-    A teszt kreterendszer nem tartalmaz olyan beépített bővítményt amely ne egy fordítóprogramot kezelne, ugyanakkor
+    A teszt keretrendszer nem tartalmaz olyan beépített bővítményt amely ne egy fordítóprogramot kezelne, ugyanakkor
     könnyen megvalósítható egy olyan \textit{Sut} bővítmény implementáció, amely nem csak fordítóprogramot tud
     tesztelni, hanem bármilyen parancssorból vezérelhető programot.
 
@@ -182,8 +182,8 @@ class SutPluginLoader:
 
     \begin{enumerate}
         \item A bővítmény a \textit{setup} lépésben beállítja megfelelő munka könyvtárat ugyanis a dokumentum fordítók
-              erre érzkények.
-        \item A \textit{compile} lépésben végrehajtaj az első futást ahol a referenciák még üresek.
+              erre érzékenyek.
+        \item A \textit{compile} lépésben végrehajtja az első futást ahol a referenciák még üresek.
         \item A \textit{link} lépésben végrehajtja a második futást ahol elkészül a teljes dokumentum \textit{DVI} vagy
               \textit{PDF} formátumban.
         \item A \textit{run} lépésben pedig egy nyelvtani korrektor program ellenőrzi a generált dokumentumot.

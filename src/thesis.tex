@@ -43,7 +43,6 @@
  top=25mm,
  }
 
-\usepackage{lastpage}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \hypersetup{
@@ -80,7 +79,7 @@
 \fancypagestyle{fancy}{
     \fancyhf{}
     \fancyhead[R]{\nouppercase{\leftmark}}
-    \fancyfoot[R]{\thepage. oldal (összesen~\pageref{LastPage})}
+    \fancyfoot[R]{\thepage. oldal}
     \renewcommand{\headrulewidth}{0.4pt}
 }
 \fancypagestyle{plain}[fancy]{}

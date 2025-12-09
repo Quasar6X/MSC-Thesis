@@ -1,7 +1,7 @@
 \chapter{A \textit{ConfigManager}}\label{chp:config-manager}
 
 Ahogy azt a~\ref{sec:intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel a a
-konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek, arra hogy hogyan értelmezi a keretrendszer a
+konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek arra, hogy hogyan értelmezi a keretrendszer a
 konfigurációt, a kód oldalán és arra is, hogy milyen formátumban várja a konfigurációt.
 
 \section{A konfigurációs fájl}
@@ -11,11 +11,11 @@ konfigurációt, a kód oldalán és arra is, hogy milyen formátumban várja a 
 
     Az \textit{.INI} fájloknak több előnye is van, gyorsan beolvasható, a Python standard függvénykönyvtár is ad ehhez
     egy implementációt~\cite{pythonconfigparser}. Továbbá, emberek számára is olvasható, de a legfontosabb tulajdonsága
-    ami miatt rá esett a választásom, hogy szekciókra lehet bontani az adatokat. Ez a szekciókra bontás lehetővé teszi
+    ami miatt rá esett a választásom, hogy szekciókra lehet bontani az adatokat. Ez a szekciókra bontás lehetővé teszi,
     hogy felállítsunk egy hierarchiát a konfigurációk között, így elkerülve a duplikált konfigurációkat.
 
     A hierarchia gyökere a \textit{DEFAULT} szekció, minden más szekció ennek az értékeit tudja felülírni vagy
-    kibővíteni. A konfigurációk előtti \textit{+} jelzi hogy a szekció kibővíti az adott konfigurációs értéket, nem
+    kibővíteni. A konfigurációk előtti \textit{+} jelzi, hogy a szekció kibővíti az adott konfigurációs értéket, nem
     pedig felülírja azt.
 
     A \textbf{\ref{fig:section-hierarchy}. ábra} mutatja, hogyan lehet egy meglévő szekcióból konfigurációt örökölni,
@@ -43,7 +43,7 @@ CFG2 =
     \end{figure}
 
     \noindent
-    A \textbf{\ref{fig:config-full}. ábra} egy teljes konfigurációs fájlra ad példát.
+    A mellékletekben található \textbf{\ref{fig:config-full}. ábra} egy teljes konfigurációs fájlra ad példát.
 
     \subsection{A \textit{BuildOption} konfigurációk}
 
@@ -52,14 +52,14 @@ CFG2 =
         konfigurációból a Python kódba.
 
         A támogatásukhoz fel kell venni egy-egy osztályt ami kezeli a konfigurációból beolvasott érték, fordítási
-        kapcsolóra való konvertálását. Ezzel gyakorlailag függetleníteni lehet a konfigurációs értékek szintaxisát a
-        fordítóprogram által várt parancssori paraméterek szintaxisától. Pár példa a teljeség igénye nélkül
+        kapcsolóra való konvertálását. Ezzel gyakorlatilag függetleníteni lehet a konfigurációs értékek szintaxisát a
+        fordítóprogram által várt parancssori paraméterek szintaxisától. Pár példa a teljesség igénye nélkül
         \textit{BuildOption} kapcsolóra:\\ \verb|ARCH, OPT_LEVEL, EXCEPTIONS, BUILTIN, FLOAT_ABI|.
 
     \subsection{A \textit{Suites} konfiguráció}
 
         Az előbbiekben láttuk, hogy hogyan lehet kapcsolókat definiálni rugalmas módon a fordítóprogram számára, de
-        hogyan fogja tudni hogy milyen teszteket futtasson?
+        hogyan fogja tudni, hogy milyen teszteket futtasson?
 
         Erre ad megoldást a \textit{Suites} konfigurációs mező ahol fel kell sorolni a futtatni kívánt teszt
         csomagokat. A tesztcsomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden sorban
@@ -83,10 +83,10 @@ CFG2 =
 
         A \textit{Constraints} beállításban adhatunk meg megszorításokat, hogy bizonyos tesztcsomagokra csak bizonyos,
         kapcsolókat engedélyezzünk. Így a \textit{Matrix} által generált potenciálisan exponenciális kombinációkat
-        levághatóak, ha nem szükségesek. A szintaxist a következő \textbf{\ref{fig:bnf}. ábrán} látható \textit{BNF}
-        nyelvtan írja le.
+        levághatóak, ha nem szükségesek. A szintaxist a mellékletekben található, \textbf{\ref{fig:bnf}. ábrán} látható
+        \textit{BNF} nyelvtan írja le.
 
-        Tekintsük a \textbf{\ref{fig:example-constraint}. ábrán} látható példa konfigurációt, ahol feltételezzük hogy a
+        Tekintsük a \textbf{\ref{fig:example-constraint}. ábrán} látható példa konfigurációt ahol feltételezzük, hogy a
         hivatkozott \textit{Suite} és a \textit{BuildOption} konfigurációk definiáltak.
 
         \begin{figure}[h]
@@ -121,8 +121,9 @@ CONSTRAINTS =
     A különböző értékeket a \textit{get\_*} és \textit{get\_*\_default} függvény család segítségével lehet beolvasni. A
     csillag helyére a Python primitív típusok helyettesíthetőek be, kivéve a \textit{str}, valamint a \textit{lines} és
     \textit{item} szavak. Az előbbi a lista típusú konfigurációs értékeket olvassa be, az utóbbi pedig pontosan egy
-    sztringet olvas. A \textit{default} utótaggal rendelkező függvények minding a \textit{DEFAULT} szekcióból olvasnak.
-    A \textit{ConfigManager} publikus interfészét a \textbf{\ref{fig:config-manager}. ábra} mutatja.
+    sztringet olvas. A \textit{default} utótaggal rendelkező függvények mindig a \textit{DEFAULT} szekcióból olvasnak.
+    A \textit{ConfigManager} publikus interfészét a mellékletekben található \textbf{\ref{fig:config-manager}. ábra}
+    mutatja.
 
     \pagebreak
     \subsection{A \textit{ConfigGenerator}}
@@ -134,7 +135,7 @@ CONSTRAINTS =
 
         A \textit{ConfigGenerator} generikus mind a kettő említett típusában. Ez azért fontos mert különböző
         konfigurációk különböző konkrét implementációkat használnak, így a hívó oldalán megjelenő objektumok típusa nem
-        veszik el. A generikus definícót az \textbf{\ref{fig:config-generator}. ábra} szemlélteti.
+        veszik el. A generikus definíciót az \textbf{\ref{fig:config-generator}. ábra} szemlélteti.
 
         \begin{figure}[ht]
             \centering
@@ -164,6 +165,6 @@ class ConfigGenerator[T: Target, O: Option]:
     konfigurációs elemeket.
 
     Azonban a legnagyobb előnye is ebből származik, mert bármilyen leképezés megadható egy opció konfigurációs fájlban
-    megjelenő formája és a későbbi, parancsosori argumentum formája között. Így a konfigurációs fájl hordozható marad
+    megjelenő formája és a későbbi, parancssori argumentum formája között. Így a konfigurációs fájl hordozható marad
     különböző parancssori szintaktikát használó fordítóprogramok között. Ezt a működést reprodukálni hagyományos
     sémákkal, nagyon hosszú és nehezen olvasható konfigurációhoz vezetne.

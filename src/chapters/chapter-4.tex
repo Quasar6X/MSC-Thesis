@@ -1,8 +1,8 @@
-\chapter{\textit{SuperSet}, \textit{SuperSetProducer} és \textit{SuperSetConsumer}}
+\chapter{\textit{SuperSet}, \textit{SuperSetProducer}, és \textit{SuperSetConsumer}}
 
-A fejezet címében szereplő három komponenst, amelyek az\textbf{\ref{fig:component-sets}. ábrán} láthatóak, egyszerre
+A fejezet címében szereplő három komponenst, amelyek az \textbf{\ref{fig:component-sets}. ábrán} láthatóak, egyszerre
 tekintjük át. Ennek egyszerű oka a komponensek működése nagyon hasonló. Fő szerepük a munka hatékony felosztása az
-elérhető hardvereken. A hasonlóság okán közös ősosztályból örökelnek ez a \textit{SuperSetBase}. Ez az osztály kezeli a
+elérhető hardvereken. A hasonlóság okán közös ősosztályból örökölnek ez a \textit{SuperSetBase}. Ez az osztály kezeli a
 közös parancssori argumentumokat, beállítja a munkakönyvtárat, és példányt készít a \textit{ConfigManager} objektumból.
 
 Ezek a komponensek kapják meg bemenetként a teszt csomagokat, majd osztják szét azokat, végül aggregálják az
@@ -75,7 +75,7 @@ található egyes tesz eseteket.
         elkerülhető a fájlnév ütközés.
 
         Ez az \textit{I/O} költség indokolja a \textit{munkafolyamat sor} létét. Máskülönben, gyorsan futó tesztesetek
-        esetén előfordulhatna, hogy nincs munka mert az \textit{I/O} műveletekre várunk, tehát a folyamatunk ehézne!
+        esetén előfordulhatna, hogy nincs munka mert az \textit{I/O} műveletekre várunk, tehát a folyamatunk éhezne!
 
         Ugyanakkor azt is lehet látni, hogy a \textit{munkafolyamat sorhoz} való hozzáférést védeni kell egy
         \textbf{Mutexel}. Ennek a mutexnek a megszerzése \textbf{zárolási versenyhez} vezethet ami ugyanúgy éhezteti a
@@ -94,20 +94,20 @@ található egyes tesz eseteket.
 
         Az eredmények aggregálása implementációját tekintve különbözik az elosztott és a lokális futtatások között.
 
-        A \textit{SuperSet} lokális komponens esetében a lefutatott tesztesetek eredményi szintén egy \textbf{FIFO
+        A \textit{SuperSet} lokális komponens esetében a lefuttatott tesztesetek eredményi szintén egy \textbf{FIFO
         sorba} kerülnek. Mivel az aggregáló folyamatból csak egy fut így nem kell aggódni, hogy \textit{zárolási
         verseny} lépne fel. Az aggregáló folyamat csak akkor indul el ha már minden munka elő lett készítve.
 
-        A \textit{SuperSetProducer} elosztott szerver oldali komponens esetében a lefutatott eredményeket a szerver
+        A \textit{SuperSetProducer} elosztott szerver oldali komponens esetében a lefuttatott eredményeket a szerver
         tömbösítve egy tesztcsomag egy konfigurációjánként kapja vissza.
 
         Az implementációban közös, hogy mindkét esetben az eredmények egy \textit{SQLite} alapú adatbázisban lesznek
         elérhetőek. Jogosan merül fel a kérdés, hogy egy egyszerű leírónyelv fájl kimenet is megfelelő lehet.
 
-        Azonban az \textit{SQLite} adatbázisnak több előnnye is van. Először is \textit{SQL} nyelven írható hozzá
+        Azonban az \textit{SQLite} adatbázisnak több előnye is van. Először is \textit{SQL} nyelven írható hozzá
         lekérdezés így könnyen lehet szűrni az eredmények között. Továbbá az adatbázis egy tömörebb bináris formátumban
         tárolja az adatot, ez segít az eredmények könnyebb tárolásában. Ennél viszont sokkal fontosabb tulajdonsága,
-        hogy hozzáfűzni egy új eredményt egy nagy adatbázishoz közel ugyanannyi idő mint egy ürsehez. Ez fájlok
+        hogy hozzáfűzni egy új eredményt egy nagy adatbázishoz közel ugyanannyi idő mint egy üreshez. Ez fájlok
         esetében nem mondható el ahol az egész fájlt, vagy az azt reprezentáló adatstruktúrát memóriában kell tartani.
         Mivel egy futás eredmény több \textbf{megabájt} is lehet így az adatbázisba írás sokkal gyorsabb.
 
@@ -173,7 +173,7 @@ található egyes tesz eseteket.
             \caption{\label{fig:protocol-buffer} A protokoll csomag bájt mérete}
         \end{figure}
 
-        A protkoll csomag először \emph{2 bájtot} küld amiben a protokoll verziója van. Ez biztonsági okokból
+        A protokoll csomag először \emph{2 bájtot} küld amiben a protokoll verziója van. Ez biztonsági okokból
         szükséges. Ha a jövőben változtatni szeretnék a protokoll struktúráján akkor azt könnyen megtehetem, mert ha a
         verziók nem egyeznek akkor a kapcsolat nem épül fel.
 
@@ -183,7 +183,7 @@ található egyes tesz eseteket.
         A következő bájt az üzenet típusát azonosítja amely a következők egyike lehet:
 
         \begin{itemize}
-            \item \textit{*InitialData}: A kliens küldi a szervernek csatlakozáskor. Tartalmazza a kliens errőforrásait
+            \item \textit{*InitialData}: A kliens küldi a szervernek csatlakozáskor. Tartalmazza a kliens őforrásait
                   \textit{(CPU magok száma)}, és a \textit{host nevét}.
             \item \textit{ReqWork}: A kliens küldi amikor készen áll a teszt futtatásra.
             \item \textit{*ClientConfig}: A szerver küldi a kliensnek, hogy milyen konfigurációs fájlt töltsön be.
