@@ -2,7 +2,8 @@
     "[latex]": {
         "editor.defaultFormatter": "James-Yu.latex-workshop",
         "editor.formatOnSave": true,
-        "editor.rulers": [120]
+        "editor.rulers": [120],
+        "editor.minimap.enabled": false
     },
     "latex-workshop.formatting.latex": "latexindent",
     "latex-workshop.formatting.latexindent.args": [

@@ -8,9 +8,6 @@ modifyLineBreaks:
     when: after
     multipleSpacesToSingle: 1
     removeBlockLineBreaks: 1
-  commands:
-    footnote:
-      CommandStartsOnOwnLine: 1
 
 indentAfterHeadings:
   section:
