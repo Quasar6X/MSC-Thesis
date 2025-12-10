@@ -1,31 +1,32 @@
-\chapter{A \textit{ConfigManager}}\label{chp:config-manager}
+\section{A \textit{ConfigManager}}\label{chp:config-manager}
 
-Ahogy azt a~\ref{sec:intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel a a
-konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek arra, hogy hogyan értelmezi a keretrendszer a
-konfigurációt, a kód oldalán és arra is, hogy milyen formátumban várja a konfigurációt.
+    Ahogy azt a~\ref{sec:intro-config-manager} fejezetben említettem, a \textit{ConfigManager} szoftver komponens felel
+    a a konfigurációs értékek beolvasásáért. Ebben a fejezetben kitérek arra, hogy hogyan értelmezi a keretrendszer a
+    konfigurációt, a kód oldalán és arra is, hogy milyen formátumban várja a konfigurációt.
 
-\section{A konfigurációs fájl}
+    \subsection{A konfigurációs fájl}
 
-    A konfigurációs formátum \textit{.INI} fájl formátumot használ. Jogosan merül fel az olvasóban a kérdés, hogy miért
-    pont erre a napjainkban már kevésbé divatos formátumra esett a választás.
+        A konfigurációs formátum \textit{.INI} fájl formátumot használ. Jogosan merül fel az olvasóban a kérdés, hogy
+        miért pont erre a napjainkban már kevésbé divatos formátumra esett a választás.
 
-    Az \textit{.INI} fájloknak több előnye is van, gyorsan beolvasható, a Python standard függvénykönyvtár is ad ehhez
-    egy implementációt~\cite{pythonconfigparser}. Továbbá, emberek számára is olvasható, de a legfontosabb tulajdonsága
-    ami miatt rá esett a választásom, hogy szekciókra lehet bontani az adatokat. Ez a szekciókra bontás lehetővé teszi,
-    hogy felállítsunk egy hierarchiát a konfigurációk között, így elkerülve a duplikált konfigurációkat.
+        Az \textit{.INI} fájloknak több előnye is van, gyorsan beolvasható, a Python standard függvénykönyvtár is ad
+        ehhez egy implementációt~\cite{pythonconfigparser}. Továbbá, emberek számára is olvasható, de a legfontosabb
+        tulajdonsága ami miatt rá esett a választásom, hogy szekciókra lehet bontani az adatokat. Ez a szekciókra
+        bontás lehetővé teszi, hogy felállítsunk egy hierarchiát a konfigurációk között, így elkerülve a duplikált
+        konfigurációkat.
 
-    A hierarchia gyökere a \textit{DEFAULT} szekció, minden más szekció ennek az értékeit tudja felülírni vagy
-    kibővíteni. A konfigurációk előtti \textit{+} jelzi, hogy a szekció kibővíti az adott konfigurációs értéket, nem
-    pedig felülírja azt.
+        A hierarchia gyökere a \textit{DEFAULT} szekció, minden más szekció ennek az értékeit tudja felülírni vagy
+        kibővíteni. A konfigurációk előtti \textit{+} jelzi, hogy a szekció kibővíti az adott konfigurációs értéket,
+        nem pedig felülírja azt.
 
-    A \textbf{\ref{fig:section-hierarchy}. ábra} mutatja, hogyan lehet egy meglévő szekcióból konfigurációt örökölni,
-    illetve felülírni. Ha a program futás során a \textit{DEFAULT} szekciót választjuk akkor a konfigurációs elemeink
-    értékei rendre \verb|CFG1 = [1, 2]| és \verb|CFG2 = [3, 4]|. Ha a \textit{MY\_SECTION} szekciót választjuk akkor
-    pedig, \verb|CFG1 = [1, 2, 3]| és \verb|CFG2 = [5]|. \pagebreak
+        A \textbf{\ref{fig:section-hierarchy}. ábra} mutatja, hogyan lehet egy meglévő szekcióból konfigurációt
+        örökölni, illetve felülírni. Ha a program futás során a \textit{DEFAULT} szekciót választjuk akkor a
+        konfigurációs elemeink értékei rendre \verb|CFG1 = [1, 2]| és \verb|CFG2 = [3, 4]|. Ha a \textit{MY\_SECTION}
+        szekciót választjuk akkor pedig, \verb|CFG1 = [1, 2, 3]| és \verb|CFG2 = [5]|.
 
-    \begin{figure}[ht]
-        \centering
-        \begin{minted}{INI}
+        \begin{figure}[ht]
+            \centering
+            \begin{minted}{INI}
 [DEFAULT]
 CFG1 =
     1
@@ -39,132 +40,163 @@ CFG2 =
 CFG2 =
     5
         \end{minted}
-        \caption{\label{fig:section-hierarchy} A szekció hierarchia konstrukció}
-    \end{figure}
+            \caption{\label{fig:section-hierarchy} A szekció hierarchia konstrukció}
+        \end{figure}
 
-    \noindent
-    A mellékletekben található \textbf{\ref{fig:config-full}. ábra} egy teljes konfigurációs fájlra ad példát.
-
-    \subsection{A \textit{BuildOption} konfigurációk}
-
-        A konfigurációs fájlban pár beállítástól eltekintve, a konfigurációs elemek egy-egy fordítóprogram kapcsolóhoz
-        tartoznak. Ezek a \textit{BuildOption} beállítások. Ezek a beállítások egy leképezést alkotnak a
-        konfigurációból a Python kódba.
-
-        A támogatásukhoz fel kell venni egy-egy osztályt ami kezeli a konfigurációból beolvasott érték, fordítási
-        kapcsolóra való konvertálását. Ezzel gyakorlatilag függetleníteni lehet a konfigurációs értékek szintaxisát a
-        fordítóprogram által várt parancssori paraméterek szintaxisától. Pár példa a teljesség igénye nélkül
-        \textit{BuildOption} kapcsolóra:\\ \verb|ARCH, OPT_LEVEL, EXCEPTIONS, BUILTIN, FLOAT_ABI|.
-
-    \subsection{A \textit{Suites} konfiguráció}
-
-        Az előbbiekben láttuk, hogy hogyan lehet kapcsolókat definiálni rugalmas módon a fordítóprogram számára, de
-        hogyan fogja tudni, hogy milyen teszteket futtasson?
-
-        Erre ad megoldást a \textit{Suites} konfigurációs mező ahol fel kell sorolni a futtatni kívánt teszt
-        csomagokat. A tesztcsomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden sorban
-        egy elérési útvonallal. Ezzel a mechanizmussal bármilyen tesztesetekből álló tesztcsomag definiálható.
-
-        A legnagyobb előnye ennek a formátumnak, hogy a keretrendszer követni tudja, hogy melyik tesztesetet futtatta
-        már. Így ha a tesztcsomagok osztoznak egy-egy teszteseten akkor a keretrendszer egyszerűen
-        \textbf{behelyettesíti} a meglévő eredményt.
-
-        Ezen mechanizmus adta az ötletet a projekt elnevezésére.
+        \noindent
+        A mellékletekben található \textbf{\ref{fig:config-full}. ábra} egy teljes konfigurációs fájlra ad példát.
 
         \pagebreak
-    \subsection{A \textit{Matrix} és a \textit{Constraints}}
 
-        Most, hogy már ki tudjuk választani a fordítóprogram számára megfelelő opciókat, és definiálni tudjuk a
-        futtatandó tesztcsomagokat a kettő beállítás között kapcsolatot kell teremteni. Erre a kapcsolat teremtésre
-        szolgálnak a \textit{Matrix} és a \textit{Constraints} beállítások.
+        \subsubsection{A \textit{BuildOption} konfigurációk}
 
-        A \textit{Matrix} beállításban fel kell sorolni az összes olyan \textit{BuildOption} konfigurációt amit
-        futtatni szeretnénk.
+            A konfigurációs fájlban pár beállítástól eltekintve, a konfigurációs elemek egy-egy fordítóprogram
+            kapcsolóhoz tartoznak. Ezek a \textit{BuildOption} beállítások. Ezek a beállítások egy leképezést alkotnak
+            a konfigurációból a Python kódba.
 
-        A \textit{Constraints} beállításban adhatunk meg megszorításokat, hogy bizonyos tesztcsomagokra csak bizonyos,
-        kapcsolókat engedélyezzünk. Így a \textit{Matrix} által generált potenciálisan exponenciális kombinációkat
-        levághatóak, ha nem szükségesek. A szintaxist a mellékletekben található, \textbf{\ref{fig:bnf}. ábrán} látható
-        \textit{BNF} nyelvtan írja le.
+            A támogatásukhoz fel kell venni egy-egy osztályt ami kezeli a konfigurációból beolvasott érték, fordítási
+            kapcsolóra való konvertálását. Ezzel gyakorlatilag függetleníteni lehet a konfigurációs értékek szintaxisát
+            a fordítóprogram által várt parancssori paraméterek szintaxisától. Pár példa a teljesség igénye nélkül
+            \textit{BuildOption} kapcsolóra:\\ \verb|ARCH, OPT_LEVEL, EXCEPTIONS, BUILTIN, FLOAT_ABI|.
 
-        Tekintsük a \textbf{\ref{fig:example-constraint}. ábrán} látható példa konfigurációt ahol feltételezzük, hogy a
-        hivatkozott \textit{Suite} és a \textit{BuildOption} konfigurációk definiáltak.
+        \subsubsection{A \textit{Suites} konfiguráció}
 
-        \begin{figure}[h]
-            \centering
-            \begin{minted}{INI}
+            Az előbbiekben láttuk, hogy hogyan lehet kapcsolókat definiálni rugalmas módon a fordítóprogram számára, de
+            hogyan fogja tudni, hogy milyen teszteket futtasson?
+
+            Erre ad megoldást a \textit{Suites} konfigurációs mező ahol fel kell sorolni a futtatni kívánt teszt
+            csomagokat. A tesztcsomagokhoz tartozó fájlokat egy \textit{SET} forrásfájlban kell felsorolni, minden
+            sorban egy elérési útvonallal. Ezzel a mechanizmussal bármilyen tesztesetekből álló tesztcsomag
+            definiálható.
+
+            A legnagyobb előnye ennek a formátumnak, hogy a keretrendszer követni tudja, hogy melyik tesztesetet
+            futtatta már. Így ha a tesztcsomagok osztoznak egy-egy teszteseten akkor a keretrendszer egyszerűen
+            \textbf{behelyettesíti} a meglévő eredményt.
+
+            Ezen mechanizmus adta az ötletet a projekt elnevezésére.
+
+        \subsubsection{A \textit{Matrix} és a \textit{Constraints}}
+
+            Most, hogy már ki tudjuk választani a fordítóprogram számára megfelelő opciókat, és definiálni tudjuk a
+            futtatandó tesztcsomagokat a kettő beállítás között kapcsolatot kell teremteni. Erre a kapcsolat teremtésre
+            szolgálnak a \textit{Matrix} és a \textit{Constraints} beállítások.
+
+            A \textit{Matrix} beállításban fel kell sorolni az összes olyan \textit{BuildOption} konfigurációt amit
+            futtatni szeretnénk.
+
+            A \textit{Constraints} beállításban adhatunk meg megszorításokat, hogy bizonyos tesztcsomagokra csak
+            bizonyos, kapcsolókat engedélyezzünk. Így a \textit{Matrix} által generált potenciálisan exponenciális
+            kombinációkat levághatóak, ha nem szükségesek. A szintaxist a mellékletekben található,
+            \textbf{\ref{fig:bnf}. ábrán} látható \textit{BNF} nyelvtan írja le.
+
+            Tekintsük a \textbf{\ref{fig:example-constraint}. ábrán} látható példa konfigurációt ahol feltételezzük,
+            hogy a hivatkozott \textit{Suite} és a \textit{BuildOption} konfigurációk definiáltak.
+
+            \begin{figure}[h]
+                \centering
+                \begin{minted}{INI}
 CONSTRAINTS =
     *&EXCEPTIONS
     EXPRS&OPT_LEVEL:Oz
     LOOPS&OPT_LEVEL:O1&BUILTIN
             \end{minted}
-            \caption{\label{fig:example-constraint} Példa \textit{Constraints} konfigurációra}
-        \end{figure}
+                \caption{\label{fig:example-constraint} Példa \textit{Constraints} konfigurációra}
+            \end{figure}
 
-        Ez a konfiguráció definíció szerint, rendre a következő megszorításokat fogja alkalmazni:
+            Ez a konfiguráció definíció szerint, rendre a következő megszorításokat fogja alkalmazni:
 
-        \begin{itemize}
-            \item Az \textbf{ÖSSZES} tesztcsomagból kiszűri az \textbf{EXCEPTIONS} kapcsoló bármely értékét.
-            \item Az \textbf{EXPRS} tesztcsomagból kiszűri az \textbf{OPT\_LEVEL} kapcsoló \textbf{Oz} értékét.
-            \item A \textbf{LOOPS} tesztcsomagból kiszűri az \textbf{OPT\_LEVEL} kapcsoló \textbf{O1} értékét és a \\
-                  \textbf{BUILTIN} kapcsoló bármely értékét.
-        \end{itemize}
+            \begin{itemize}
+                \item Az \textbf{ÖSSZES} tesztcsomagból kiszűri az \textbf{EXCEPTIONS} kapcsoló bármely értékét.
+                \item Az \textbf{EXPRS} tesztcsomagból kiszűri az \textbf{OPT\_LEVEL} kapcsoló \textbf{Oz} értékét.
+                \item A \textbf{LOOPS} tesztcsomagból kiszűri az \textbf{OPT\_LEVEL} kapcsoló \textbf{O1} értékét és a
+                      \\ \textbf{BUILTIN} kapcsoló bármely értékét.
+            \end{itemize}
 
-        \noindent
-        További konfigurációs elemek is elérhetőek ezzel a szintexissal. A teljesség igénye nélkül pár példa:
-        \textit{SKIPLISTS}, \textit{CFLAGS}, \textit{TIMEOUT\_RUN}, \textit{TIMEOUT\_COMPILE}.
+            \noindent
+            További konfigurációs elemek is elérhetőek ezzel a szintexissal. A teljesség igénye nélkül pár példa:
+            \textit{SKIPLISTS}, \textit{CFLAGS}, \textit{TIMEOUT\_RUN}, \textit{TIMEOUT\_COMPILE}.
 
-\section{A konfiguráció beolvasása}
+    \subsection{A konfiguráció beolvasása}
 
-    A konfigurációt a \textit{ConfigManager} szoftver komponens olvassa be. Itt történik a szekció kiválasztása,
-    ügyelve a hierarchikus szekció kezelés szemantikájára.
+        A konfigurációt a \textit{ConfigManager} szoftver komponens olvassa be. Itt történik a szekció kiválasztása,
+        ügyelve a hierarchikus szekció kezelés szemantikájára.
 
-    A különböző értékeket a \textit{get\_*} és \textit{get\_*\_default} függvény család segítségével lehet beolvasni. A
-    csillag helyére a Python primitív típusok helyettesíthetőek be, kivéve a \textit{str}, valamint a \textit{lines} és
-    \textit{item} szavak. Az előbbi a lista típusú konfigurációs értékeket olvassa be, az utóbbi pedig pontosan egy
-    sztringet olvas. A \textit{default} utótaggal rendelkező függvények mindig a \textit{DEFAULT} szekcióból olvasnak.
-    A \textit{ConfigManager} publikus interfészét a mellékletekben található \textbf{\ref{fig:config-manager}. ábra}
-    mutatja.
+        A különböző értékeket a \textit{get\_*} és \textit{get\_*\_default} függvény család segítségével lehet
+        beolvasni. A csillag helyére a Python primitív típusok helyettesíthetőek be, kivéve a \textit{str}, valamint a
+        \textit{lines} és \textit{item} szavak. Az előbbi a lista típusú konfigurációs értékeket olvassa be, az utóbbi
+        pedig pontosan egy sztringet olvas. A \textit{default} utótaggal rendelkező függvények mindig a
+        \textit{DEFAULT} szekcióból olvasnak. A \textit{ConfigManager} publikus interfészét a mellékletekben található
+        \textbf{\ref{fig:config-manager}. ábra} mutatja.
 
-    \pagebreak
-    \subsection{A \textit{ConfigGenerator}}
+        \subsubsection{A \textit{ConfigGenerator}}
 
-        A beolvasás után a típus hozzárendelést a \textit{ConfigGenerator} alkomponens végzi. Bemenetében két
-        \textit{Mapping} típust kap. Az első sztrigekhez rendeli a tesztcsomagokat, a második pedig szintén
-        sztringekhez rendeli a \textit{BuildOption} beállításokat. Ezek alapján tudja legyártani a futtatáshoz a
-        megfelelő tesztcsomag objektumot \textit{create\_target} függvénnyel, és futtatási kapcsolókat.
+            A beolvasás után a típus hozzárendelést a \textit{ConfigGenerator} alkomponens végzi. Bemenetében két
+            \textit{Mapping} típust kap. Az első sztrigekhez rendeli a tesztcsomagokat, a második pedig szintén
+            sztringekhez rendeli a \textit{BuildOption} beállításokat. Ezek alapján tudja legyártani a futtatáshoz a
+            megfelelő tesztcsomag objektumot \textit{create\_target} függvénnyel, és futtatási kapcsolókat.
 
-        A \textit{ConfigGenerator} generikus mind a kettő említett típusában. Ez azért fontos mert különböző
-        konfigurációk különböző konkrét implementációkat használnak, így a hívó oldalán megjelenő objektumok típusa nem
-        veszik el. A generikus definíciót az \textbf{\ref{fig:config-generator}. ábra} szemlélteti.
+            A \textit{ConfigGenerator} generikus mind a kettő említett típusában. Ez azért fontos mert különböző
+            konfigurációk különböző konkrét implementációkat használnak, így a hívó oldalán megjelenő objektumok típusa
+            nem veszik el. A generikus definíciót az \textbf{\ref{fig:config-generator}. ábra} szemlélteti.
 
-        \begin{figure}[ht]
-            \centering
-            \begin{minted}{python}
+            \begin{figure}[ht]
+                \centering
+                \begin{minted}{python}
 class ConfigGenerator[T: Target, O: Option]:
     def __init__(
-        self,
-        config_manager: ConfigManager,
-        targets: "Mapping[str, type[T]]",
-        options: "Mapping[str, type[O]]",
+        self, cm: ConfigManager, targets: "Mapping[str, type[T]]", options: "Mapping[str, type[O]]",
     ) -> None: ...
-
     def create_target(name: str, *args: Any, **kwargs: Any) -> T: ...
-
     def filter_configs(target: T) -> None: ...
             \end{minted}
-            \caption{\label{fig:config-generator} A generikus \textit{ConfigGenerator} definíciója}
-        \end{figure}
+                \caption{\label{fig:config-generator} A generikus \textit{ConfigGenerator} definíciója}
+            \end{figure}
 
-        A kapcsolók szűrése a \textit{filter\_configs} függbényben történik. A szűrés eredménye a kimenő
-        \textit{Target} objektum \textit{configs} mezőjében kerül eltárolásra.
+            A kapcsolók szűrése a \textit{filter\_configs} függbényben történik. A szűrés eredménye a kimenő
+            \textit{Target} objektum \textit{configs} mezőjében kerül eltárolásra.
 
-\section{Összegzés}
+    \subsection{Összegzés}
 
-    A keretrendszer konfigurációs rendszere egy komplex rendszert alkot, azonban a probléma amelyet megold szintén
-    komplex. Hátránya, egy hagyományos sémával rendelkező leírónyelvvel szemben, osztályokkal kell modellezni a
-    konfigurációs elemeket.
+        A keretrendszer konfigurációs rendszere egy komplex rendszert alkot, azonban a probléma amelyet megold szintén
+        komplex. Hátránya, egy hagyományos sémával rendelkező leírónyelvvel szemben, osztályokkal kell modellezni a
+        konfigurációs elemeket.
 
-    Azonban a legnagyobb előnye is ebből származik, mert bármilyen leképezés megadható egy opció konfigurációs fájlban
-    megjelenő formája és a későbbi, parancssori argumentum formája között. Így a konfigurációs fájl hordozható marad
-    különböző parancssori szintaktikát használó fordítóprogramok között. Ezt a működést reprodukálni hagyományos
-    sémákkal, nagyon hosszú és nehezen olvasható konfigurációhoz vezetne.
+        Azonban a legnagyobb előnye is ebből származik, mert bármilyen leképezés megadható egy opció konfigurációs
+        fájlban megjelenő formája és a későbbi, parancssori argumentum formája között. Így a konfigurációs fájl
+        hordozható marad különböző parancssori szintaktikát használó fordítóprogramok között. Ezt a működést
+        reprodukálni hagyományos sémákkal, nagyon hosszú és nehezen olvasható konfigurációhoz vezetne.
+
+        A konfigurációs fájlt tekintve, a \textit{DEFAULT} szekcióra épülő hierarchia lehetővé teszi az alapértelmezett
+        beállítások központi definiálását, amelyeket a többi szekció örököl. A \textit{+} előjeles bővítés és a
+        felülírás támogatása csökkenti a duplikációt, jól strukturált, könnyen karbantartható konfigurációs fájlokat
+        eredményez.
+
+        Ezen felül a konfigurációs fájl kitüntetett mezőin kívül bármilyen egyéb \\ \textit{domain-specifikus} mező
+        beolvasható, amelynek értéke később felhasználható a tesztesetek futtatása során. Ez triviálisan elérhető az
+        egységes, \textit{.INI} alapú struktúra által.
+
+        A tesztesetek kiválasztása is kényelmes \textit{MATRIX} és a \textit{CONSTRAINTS} mezőkön keresztül. A
+        \textit{MATRIX} beállítás segítségével rendszerszinten felírható az összes kívánt \textit{BuildOption}
+        kombináció, így könnyen lefedhetők komplex konfigurációs terek. A \textit{CONSTRAINTS} szintaxis pedig lehetővé
+        teszi, hogy tesztcsomagonként vagy kapcsolószinten megszorításokat adjunk meg, ezzel az exponenciális
+        kombinációs robbanást célzottan visszavágja.
+
+        \subsubsection{Összehasnlítás más keretrendszerek konfigurációs megoldásaival}
+
+            Hasnolítsuk össze a~\ref{sec:ch1-outlook} fejezetben megismert programok konfigurációs lehetőségeivel a
+            \textit{ConfigManager} által nyújtott lehetőségeket. Az összehasonlítás a
+            \textbf{\ref{fig:chp3-comparison}. ábárn} látható.
+
+            \begin{figure}[ht]
+                \centering
+                \begin{tabular}{l*{3}{p{3.6cm}}}
+                    \toprule
+                                               & Konfigurációs fájl & Szintaxis  independens       & Hierarchikus konfiguráció \\
+                    \midrule
+                    \textit{DejaGnu}           & Szkript            & Nehezen elérhető             & Mappa struktúrában        \\
+                    \textit{Lit}               & Szkript            & Nehezen elérhető             & Mappa Struktúrában        \\
+                    \textit{\textbf{SuperSet}} & Leíró nyelv        & Konfiguráció nélkül elérhető & A leíró fájlon belül      \\
+                    \bottomrule
+                \end{tabular}
+                \caption{\label{fig:chp3-comparison} A teszt kertrendszerek összehasonlítása}
+            \end{figure}

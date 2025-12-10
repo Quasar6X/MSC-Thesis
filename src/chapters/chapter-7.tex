@@ -1,184 +1,181 @@
-\chapter{A \textit{Gekko} szoftver komponens}
+\section{A \textit{Gekko} szoftver komponens}
 
-Bár a~\ref{sec:ch2-summary} fejezetben azt ígértem, hogy az adatiránynak megfelelő sorrendben mutatom be szoftver
-komponenseket, a \textit{Gekko} komponens pedig egy opcionális nulladik lépés, ennek ellenére az utolsó komponens
-fejezetben ismertetem.
+    Bár a~\ref{sec:ch2-summary} fejezetben azt ígértem, hogy az adatiránynak megfelelő sorrendben mutatom be szoftver
+    komponenseket, a \textit{Gekko} komponens pedig egy opcionális nulladik lépés, ennek ellenére az utolsó komponens
+    fejezetben ismertetem.
 
-Ennek legfőbb okai, hogy a \textit{Gekko} komponens használata opcionális, és a~\ref{chp:reporter} fejezetben megismert
-szoftverkomponenshez hasonlóan egy külön parancssori futtatható.
+    Ennek legfőbb okai, hogy a \textit{Gekko} komponens használata opcionális, és a~\ref{chp:reporter} fejezetben
+    megismert szoftverkomponenshez hasonlóan egy külön parancssori futtatható.
 
-A \textit{Gekko} komponens célja, hogy egy megfelelő teszt generátor alkalmazást felhasználva, létrehozni egy olyan
-testcsomagot amely kompatibilis a teszt keretrendszerrel. Gyakorlatilag egy \textit{frontendet} biztosít különböző
-teszt generátorokhoz, melyek közül tartalmaz egy implementációt a \textit{Csmith}~\cite{csmith} teszt generátorhoz.
+    A \textit{Gekko} komponens célja, hogy egy megfelelő teszt generátor alkalmazást felhasználva, létrehozni egy olyan
+    testcsomagot amely kompatibilis a teszt keretrendszerrel. Gyakorlatilag egy \textit{frontendet} biztosít különböző
+    teszt generátorokhoz, melyek közül tartalmaz egy implementációt a \textit{Csmith}~\cite{csmith} teszt generátorhoz.
 
-Az eredeti ötlet egy egyszerű szkript megvalósítása volt, amely generál valamennyi tesztesetet
-\textit{Csmith-el}~\cite{csmith}, majd kimenetüket átkonvertálja a teszt keretrendszer által ismertre. Ennél azonban
-generikusabb és robusztusabb megoldást választottam.
+    Az eredeti ötlet egy egyszerű szkript megvalósítása volt, amely generál valamennyi tesztesetet
+    \textit{Csmith-el}~\cite{csmith}, majd kimenetüket átkonvertálja a teszt keretrendszer által ismertre. Ennél
+    azonban generikusabb és robusztusabb megoldást választottam.
 
-A generátor alkalmazás által létrehozott teszteseteket megvizsgálja egy vagy több ismert stabil fordítóprogrammal, hogy
-keletkezzen egy viszonyítási alap. Erre azért van szükség mert előfordulhat, hogy egy generált teszteset bizonyos
-fordítóprogramon lefordul másikon pedig nem. Az ilyen tesztek nem várt bukásokat eredményezhetnek a tesztelés alatt
-álló fordítóprogramot használva. Az ilyen típusú hibákat nehéz megtalálni így jobb elkerülni.
+    A generátor alkalmazás által létrehozott teszteseteket megvizsgálja egy vagy több ismert stabil fordítóprogrammal,
+    hogy keletkezzen egy viszonyítási alap. Erre azért van szükség mert előfordulhat, hogy egy generált teszteset
+    bizonyos fordítóprogramon lefordul másikon pedig nem. Az ilyen tesztek nem várt bukásokat eredményezhetnek a
+    tesztelés alatt álló fordítóprogramot használva. Az ilyen típusú hibákat nehéz megtalálni így jobb elkerülni.
 
-A \textit{Gekko} komponens szoftver architekturális szempontból fel van készítve arra, hogy egyéb teszt generátorokat
-is meg tudjon hajtani, a jelen implementáción túl. Ezt többek között a \textit{Python} által nyújtott \textit{Protocol}
-osztályokkal valósítottam meg, amik lehetővé teszik a \textit{Struktúrált típusosság} alkalmazását a \textit{Pythonban}
-megszokott \textit{Duck típusosság} helyett. Ennek használatával inheritencia nélkül, implicit módon lehet
-implementálni interfészeket, a típus korrektség megőrzése mellett.
+    A \textit{Gekko} komponens szoftver architekturális szempontból fel van készítve arra, hogy egyéb teszt
+    generátorokat is meg tudjon hajtani, a jelen implementáción túl. Ezt többek között a \textit{Python} által nyújtott
+    \textit{Protocol} osztályokkal valósítottam meg, amik lehetővé teszik a \textit{Struktúrált típusosság}
+    alkalmazását a \textit{Pythonban} megszokott \textit{Duck típusosság} helyett. Ennek használatával inheritencia
+    nélkül, implicit módon lehet implementálni interfészeket, a típus korrektség megőrzése mellett.
 
-\newpage
+    \subsection{A komponens konfigurációja}
 
-\section{A komponens konfigurációja}
+        A \textit{Gekko} szoftver komponens újrahasználja a~\ref{chp:config-manager} fejezetben megismert
+        \textit{ConfigManager} komponenst, és definiálja a saját konfigurációs fájl formátumát.
 
-    A \textit{Gekko} szoftver komponens újrahasználja a~\ref{chp:config-manager} fejezetben megismert
-    \textit{ConfigManager} komponenst, és definiálja a saját konfigurációs fájl formátumát.
+        A konfigurációs fájl az alábbi szekciókat támogatja:
 
-    A konfigurációs fájl az alábbi szekciókat támogatja:
+        \begin{itemize}
+            \item \textit{DEFAULT}: itt adhatóak meg \textit{Gekko} konfigurációi. A \verb|COMPILE_TIMEOUT| és a
+                  \verb|RUN_TIMEOUT| amik a verifikáló fordítóprogramok futás idejét, illetve a generált tesztek
+                  futásidejét korlátozzák. A \verb|PREFIX| kapcsolóval a generált tesztesetek nevének előtagja
+                  változtatható. A \verb|HOST_COMPILERS| pedig egy lista azokból a fordítóprogramokból amik a viszonyítási
+                  alapot fogják adni.
+            \item \textit{CSMITH}: A jelenleg támogatott generátor kapcsolói. Itt adható meg az \verb|OPTIONS| kapcsolóval
+                  a program parancssori argumentumai. A \verb|TIMEOUT| kapcsolóval megszorítható a generátor futásideje egy
+                  időkeretbe.
+            \item A további szekciókban a verifikáló fordítóprogramokat lehet felsorolni a \textit{DEFAULT} szekció
+                  \verb|HOST_COMPILERS| kapcsolója számára. Ezen szekciók kapcsolói, a \verb|COMPILER| ami a program
+                  elérési útvonala, a \verb|COMPILE_FLAGS| ami a fordítási kapcsolók megadására szolgál, és a
+                  \verb|LINK_FLAGS| ahol a szerkesztő program számára lehet kapcsolókat átadni.
+        \end{itemize}
 
-    \begin{itemize}
-        \item \textit{DEFAULT}: itt adhatóak meg \textit{Gekko} konfigurációi. A \verb|COMPILE_TIMEOUT| és a
-              \verb|RUN_TIMEOUT| amik a verifikáló fordítóprogramok futás idejét, illetve a generált tesztek
-              futásidejét korlátozzák. A \verb|PREFIX| kapcsolóval a generált tesztesetek nevének előtagja
-              változtatható. A \verb|HOST_COMPILERS| pedig egy lista azokból a fordítóprogramokból amik a viszonyítási
-              alapot fogják adni.
-        \item \textit{CSMITH}: A jelenleg támogatott generátor kapcsolói. Itt adható meg az \verb|OPTIONS| kapcsolóval
-              a program parancssori argumentumai. A \verb|TIMEOUT| kapcsolóval megszorítható a generátor futásideje egy
-              időkeretbe.
-        \item A további szekciókban a verifikáló fordítóprogramokat lehet felsorolni a \textit{DEFAULT} szekció
-              \verb|HOST_COMPILERS| kapcsolója számára. Ezen szekciók kapcsolói, a \verb|COMPILER| ami a program
-              elérési útvonala, a \verb|COMPILE_FLAGS| ami a fordítási kapcsolók megadására szolgál, és a
-              \verb|LINK_FLAGS| ahol a szerkesztő program számára lehet kapcsolókat átadni.
-    \end{itemize}
+        A mellékletekben található, \textbf{\ref{fig:gekko-config}. ábrán} látható egy példa a konfigurációs fájlra.
 
-    A mellékletekben található, \textbf{\ref{fig:gekko-config}. ábrán} látható egy példa a konfigurációs fájlra.
+    \subsection{A komponens felépítése}
 
-\section{A komponens felépítése}
+        A \textit{workers} parancssori argumentummal finomhangolható, az egyidejűleg generált tesztesetek száma. Ez a
+        kapcsoló szemantikailag nem összekeverendő, az összesen generálni kívánt tesztesetek számát szabályzó
+        \textit{num-tests} kapcsolóval.
 
-    A \textit{workers} parancssori argumentummal finomhangolható, az egyidejűleg generált tesztesetek száma. Ez a
-    kapcsoló szemantikailag nem összekeverendő, az összesen generálni kívánt tesztesetek számát szabályzó
-    \textit{num-tests} kapcsolóval.
+        A komponens a teszt keretrendszerhez hasonlóan egy aszinkron esemény hurokban fut. Az esemény hurkon egyszerre
+        maximum a \textit{workers} kapcsoló által megadott mennyiségű egyidejű feladat fut. Ezt egy \textit{Szemafor}
+        szabályozza amely csak a \textit{workers} parancssori argumentumnak megfelelő feladatot enged egyidejűleg
+        futtatni. A \textit{Gekko} komponens viszont egyszerre dupla annyi feladatot tesz fel az esemény hurokra mint
+        amennyi egyidejűleg futhat.
 
-    A komponens a teszt keretrendszerhez hasonlóan egy aszinkron esemény hurokban fut. Az esemény hurkon egyszerre
-    maximum a \textit{workers} kapcsoló által megadott mennyiségű egyidejű feladat fut. Ezt egy \textit{Szemafor}
-    szabályozza amely csak a \textit{workers} parancssori argumentumnak megfelelő feladatot enged egyidejűleg futtatni.
-    A \textit{Gekko} komponens viszont egyszerre dupla annyi feladatot tesz fel az esemény hurokra mint amennyi
-    egyidejűleg futhat.
+        Erre azért van szükség, mert annyi teszteset generálásért felelős feladat jön létre, \\ amennyi a
+        \textit{num-tests} értéke. Tehát a feladatok száma lineárisan nő, a generálandó tesztesetek számával. A
+        korlátozás azért van, hogy a feladatok számából következő lineárisan növekvő tárigény, felülről korlátos
+        legyen. Továbbá, ha gyorsabban regisztrálódnak feladatok az esemény hurkon mint ahogyan elfogynak, akkor a
+        \textit{Szemaforért} is zárolási verseny alakulna ki, ezt az esetet is kizárja a felső korlát beiktatása.
 
-    Erre azért van szükség, mert annyi teszteset generálásért felelős feladat jön létre, \\ amennyi a
-    \textit{num-tests} értéke. Tehát a feladatok száma lineárisan nő, a generálandó tesztesetek számával. A korlátozás
-    azért van, hogy a feladatok számából következő lineárisan növekvő tárigény, felülről korlátos legyen. Továbbá, ha
-    gyorsabban regisztrálódnak feladatok az esemény hurkon mint ahogyan elfogynak, akkor a \textit{Szemaforért} is
-    zárolási verseny alakulna ki, ezt az esetet is kizárja a felső korlát beiktatása.
+        A \textit{Gekko} által futtatott aszinkron feladatok három alkomponensből állnak össze. Ezen komponensek
+        \textit{UML Komponens diagramját} ábrázolja a \textbf{\ref{fig:gekko-uml}. ábra}.
 
-    A \textit{Gekko} által futtatott aszinkron feladatok három alkomponensből állnak össze. Ezen komponensek
-    \textit{UML Komponens diagramját} ábrázolja a \textbf{\ref{fig:gekko-uml}. ábra}.
+        \begin{figure}[ht]
+            \centering
+            \hrule
+            \begin{tikzpicture}
+                \begin{umlcomponent}{Gekko}
+                    \umlbasiccomponent[y=3.3]{Transformer}
+                    \umlbasiccomponent[x=2]{EvaluationEngine}
+                    \umlbasiccomponent[x=4,y=3.3]{TestGenerator}
 
-    \begin{figure}[ht]
-        \centering
-        \hrule
-        \begin{tikzpicture}
-            \begin{umlcomponent}{Gekko}
-                \umlbasiccomponent[y=3.3]{Transformer}
-                \umlbasiccomponent[x=2]{EvaluationEngine}
-                \umlbasiccomponent[x=4,y=3.3]{TestGenerator}
+                    \umlport{TestGenerator}{0}
+                    \umlrequiredinterface[interface=Config, with port]{TestGenerator}
+                    \umlprovidedinterface[interface=SSCTest, with port]{Transformer}
 
-                \umlport{TestGenerator}{0}
-                \umlrequiredinterface[interface=Config, with port]{TestGenerator}
-                \umlprovidedinterface[interface=SSCTest, with port]{Transformer}
+                    \umlHVassemblyconnector[interface=TestCase, with port, anchor1=0, anchor2=-60, second arm]{EvaluationEngine}{TestGenerator}
+                    \umlVHassemblyconnector[interface=GoodTest, with port, anchor1=-120, anchor2=180, first arm]{Transformer}{EvaluationEngine}
+                \end{umlcomponent}
 
-                \umlHVassemblyconnector[interface=TestCase, with port, anchor1=0, anchor2=-60, second arm]{EvaluationEngine}{TestGenerator}
-                \umlVHassemblyconnector[interface=GoodTest, with port, anchor1=-120, anchor2=180, first arm]{Transformer}{EvaluationEngine}
-            \end{umlcomponent}
+                \umlHVHrelation{Gekko-east-port}{TestGenerator-east-interface}
+                \umlHVHrelation{Transformer-west-interface}{Gekko-west-port}
 
-            \umlHVHrelation{Gekko-east-port}{TestGenerator-east-interface}
-            \umlHVHrelation{Transformer-west-interface}{Gekko-west-port}
+                \umlport{Gekko}{0}
+                \umlport{Gekko}{180}
+            \end{tikzpicture}
+            \hrule
+            \caption{\label{fig:gekko-uml} \textit{Gekko UML Komponens} diagram}
+        \end{figure}
 
-            \umlport{Gekko}{0}
-            \umlport{Gekko}{180}
-        \end{tikzpicture}
-        \hrule
-        \caption{\label{fig:gekko-uml} \textit{Gekko UML Komponens} diagram}
-    \end{figure}
+        \pagebreak
 
-    \newpage
+        Az architektúra gyakorlatilag egy csővezeték felépítést követ. Fontos kiemelni, hogy ha a csővezetékben bárhol
+        hiba keletkezik akkor a rendszer megpróbálja a folyamatot a csővezeték elejéről. Ezt maximum hatszor teszi meg,
+        ha ennyi alkalommal nem sikerül tesztet generálni, akkor feltételezhetjük hogy egyéb, az alkalmazás működésén
+        kívül eső probléma áll fent. Az újrapróbálkozás felső korlátja azt is jelenti, hogy a kért teszteseteknél
+        előfordulhat, hogy kevesebbet generál az alkalmazás. A bementi konfiguráció alapján a \textit{Gekko} a
+        következő lépés sorozatot hajtja végre, alkomponensek szerint:
 
-    Az architektúra gyakorlatilag egy csővezeték felépítést követ. Fontos kiemelni, hogy ha a csővezetékben bárhol hiba
-    keletkezik akkor a rendszer megpróbálja a folyamatot a csővezeték elejéről. Ezt maximum hatszor teszi meg, ha ennyi
-    alkalommal nem sikerül tesztet generálni, akkor feltételezhetjük hogy egyéb, az alkalmazás működésén kívül eső
-    probléma áll fent. Az újrapróbálkozás felső korlátja azt is jelenti, hogy a kért teszteseteknél előfordulhat, hogy
-    kevesebbet generál az alkalmazás. A bementi konfiguráció alapján a \textit{Gekko} a következő lépés sorozatot
-    hajtja végre, alkomponensek szerint:
+        \begin{enumerate}
+            \item Teszteset generálás.
+            \item Teszteset verifikáció, a konfigurációban definiált fordítóprogramokkal.
+            \item Verifikált teszteset transzformáció, a \textit{SuperSet} teszt keretrendszer formátumára.
+        \end{enumerate}
 
-    \begin{enumerate}
-        \item Teszteset generálás.
-        \item Teszteset verifikáció, a konfigurációban definiált fordítóprogramokkal.
-        \item Verifikált teszteset transzformáció, a \textit{SuperSet} teszt keretrendszer formátumára.
-    \end{enumerate}
+        A komponensek számára a konfigurációt elérhetővé kell tenni egy globális helyen, ezt a feladatot
+        \textbf{\ref{fig:gekko-uml}. ábrán} nem szereplő, \textit{Collector} komponens látja el.
 
-    A komponensek számára a konfigurációt elérhetővé kell tenni egy globális helyen, ezt a feladatot
-    \textbf{\ref{fig:gekko-uml}. ábrán} nem szereplő, \textit{Collector} komponens látja el.
+        A \textit{Collector} komponens az alábbi fontos konfigurációkat teszi elérhetővé a konfigurációs fájlból
+        beolvasottakon túl:
 
-    A \textit{Collector} komponens az alábbi fontos konfigurációkat teszi elérhetővé a konfigurációs fájlból
-    beolvasottakon túl:
+        \begin{itemize}
+            \item A teszteset generáló objektumot, amelyen keresztül egy közös interfészen keresztül hívhatóak
+                  különböző teszteset generátorok.
+            \item A verifikáló fordítóprogram objektumokat.
+        \end{itemize}
 
-    \begin{itemize}
-        \item A teszteset generáló objektumot, amelyen keresztül egy közös interfészen keresztül hívhatóak különböző
-              teszteset generátorok.
-        \item A verifikáló fordítóprogram objektumokat.
-    \end{itemize}
+        A komponens megvizsgálja a verifikáló fordítóprogramokat pár egyszerű invokációval, így megbizonyosodik róla
+        hogy a parancssori argumentum interfészük a \textit{Gekko} által ismert. A komponens ezen felül több a futás
+        során szükséges elérési útvonal létrehozásáról is gondoskodik, például a kimeneti mappáéról, és a \textit{log}
+        fájlok mappáéról.
 
-    A komponens megvizsgálja a verifikáló fordítóprogramokat pár egyszerű invokációval, így megbizonyosodik róla hogy a
-    parancssori argumentum interfészük a \textit{Gekko} által ismert. A komponens ezen felül több a futás során
-    szükséges elérési útvonal létrehozásáról is gondoskodik, például a kimeneti mappáéról, és a \textit{log} fájlok
-    mappáéról.
+    \subsection{A \textit{Gekko} alkomponensei}
 
-\section{A \textit{Gekko} alkomponensei}
+        Ahogyan azt a \textbf{\ref{fig:gekko-uml}. ábrán} láthattuk az első komponens a \textit{TestGenerator}.
 
-    Ahogyan azt a \textbf{\ref{fig:gekko-uml}. ábrán} láthattuk az első komponens a \textit{TestGenerator}.
+        A \textit{TestGenerator} alkomponens az egyetlen publikus tagfüggvényén, a \textit{generate} függvényen
+        keresztül generál egy tesztesetet. Ezt a konfigurációban megadott, teszteset generátor alkalmazás
+        alprocesszusban történő meghívásával teszi.
 
-    A \textit{TestGenerator} alkomponens az egyetlen publikus tagfüggvényén, a \textit{generate} függvényen keresztül
-    generál egy tesztesetet. Ezt a konfigurációban megadott, teszteset generátor alkalmazás alprocesszusban történő
-    meghívásával teszi.
+        A második komponens az \textit{EvaluationEngine}, vagyis a kiértékelő komponens. Ez a komponens végzi a
+        \textit{TestGenerator} által generált tesztesetek verifikációját. A konfigurációban megadott
+        fordítóprogramokkal lefordítja a tesztesetet.
 
-    A második komponens az \textit{EvaluationEngine}, vagyis a kiértékelő komponens. Ez a komponens végzi a
-    \textit{TestGenerator} által generált tesztesetek verifikációját. A konfigurációban megadott fordítóprogramokkal
-    lefordítja a tesztesetet.
+        Azonban itt nem fejezi be a munkát. A tény, hogy minden alkalmazott fordítóprogram tudott futtatható állományt
+        generálni, még nem elég ahhoz, hogy megbizonyosodjunk a teszteset helyességéről.
 
-    Azonban itt nem fejezi be a munkát. A tény, hogy minden alkalmazott fordítóprogram tudott futtatható állományt
-    generálni, még nem elég ahhoz, hogy megbizonyosodjunk a teszteset helyességéről.
+        \pagebreak
+        A \textit{Csmith}~\cite{csmith} teszteset generáló program kimeneti forrásfájljai futásidejű tesztesetek.
+        Kimenetükben egy ellenőrzőösszeget adnak vissza. Ennek az összegnek a helyességét kell verifikálni. Ennek
+        tudatában, az \textit{EvaluationEngine} implementációja az összes tesztet le is futtatja, és az eredményüket
+        ellenőrzi, hogy az elvárt ellenőrzőösszeget produkálják.
 
-    A \textit{Csmith}~\cite{csmith} teszteset generáló program kimeneti forrásfájljai futásidejű tesztesetek.
-    Kimenetükben egy ellenőrzőösszeget adnak vissza. Ennek az összegnek a helyességét kell verifikálni. Ennek
-    tudatában, az \textit{EvaluationEngine} implementációja az összes tesztet le is futtatja, és az eredményüket
-    ellenőrzi, hogy az elvárt ellenőrzőösszeget produkálják.
+        Eltérés esetén a teszteset nem kerül felhasználásra és a csővezeték hibával megáll. Itt a fentebb említett
+        módon történhet új tesztesettel újra próbálkozás.
 
-    Eltérés esetén a teszteset nem kerül felhasználásra és a csővezeték hibával megáll. Itt a fentebb említett módon
-    történhet új tesztesettel újra próbálkozás.
+        A harmadik alkomponens a \textit{Transformer}. Ahogyan azt az \textit{EvaluationEngine} kapcsán említettem a
+        \textit{Csmith}~\cite{csmith} kimenete egy specifikus formátumban van.
 
-    A harmadik alkomponens a \textit{Transformer}. Ahogyan azt az \textit{EvaluationEngine} kapcsán említettem a
-    \textit{Csmith}~\cite{csmith} kimenete egy specifikus formátumban van.
+        A formátum tartalmaz metainformációkat a generált tesztesetről, és a generáló programról. Ezek nagyon hasznos
+        információk, mert nem kell a tesztesetet lefordított futtatható állományát elmenteni, ha reprodukálni
+        szeretnénk a bukást. Egyszerűen a metainformációból újra előállítható a teszteset. A \textit{Transformer} a
+        következő metainformációkat tárolja el:
 
-    A formátum tartalmaz metainformációkat a generált tesztesetről, és a generáló programról. Ezek nagyon hasznos
-    információk, mert nem kell a tesztesetet lefordított futtatható állományát elmenteni, ha reprodukálni szeretnénk a
-    bukást. Egyszerűen a metainformációból újra előállítható a teszteset. A \textit{Transformer} a következő
-    metainformációkat tárolja el:
+        \begin{itemize}
+            \item A generáló alkalmazást, verziójával együtt.
+            \item A generáló alkalmazás parancssori argumentumait.
+            \item A \textit{Gekko} saját egyedi azonosítóját \textit{(hash)}.
+            \item A tesztgeneráló által alkalmazott \textit{seed} érték, amely a véletlen generálást reprodukálhatóvá
+                  teszi.
+        \end{itemize}
 
-    \begin{itemize}
-        \item A generáló alkalmazást, verziójával együtt.
-        \item A generáló alkalmazás parancssori argumentumait.
-        \item A \textit{Gekko} saját egyedi azonosítóját \textit{(hash)}.
-        \item A tesztgeneráló által alkalmazott \textit{seed} érték, amely a véletlen generálást reprodukálhatóvá
-              teszi.
-    \end{itemize}
+        A metainformációkat egy \textit{JSON}~\cite{json} fájlban tárolja a komponens. Az alábbi
+        \textbf{\ref{fig:metadata-json}. ábrán} látható módon.
 
-    A metainformációkat egy \textit{JSON}~\cite{json} fájlban tárolja a komponens. Az alábbi
-    \textbf{\ref{fig:metadata-json}. ábrán} látható módon.
-
-    \newpage
-
-    \begin{figure}[ht]
-        \centering
-        \begin{minted}{json}
+        \begin{figure}[ht]
+            \centering
+            \begin{minted}{json}
 {
     "test_1.c": {
         "generator": "csmith 2.4.0",
@@ -188,30 +185,31 @@ implementálni interfészeket, a típus korrektség megőrzése mellett.
     }
 }
         \end{minted}
-        \caption{\label{fig:metadata-json} Egy teszteset metainformációja \textit{JSON} formátumban}
-    \end{figure}
+            \caption{\label{fig:metadata-json} Egy teszteset metainformációja \textit{JSON} formátumban}
+        \end{figure}
 
-    \subsection{Az alkomponens interfészek}
+        \pagebreak
+        \subsubsection{Az alkomponens interfészek}
 
-        A különböző alkomponensek egy-egy interfész rétegen keresztül kommunikálnak egymással. Ez az interfész réteg a
-        \textit{Python} protokollokra építkezik.
+            A különböző alkomponensek egy-egy interfész rétegen keresztül kommunikálnak egymással. Ez az interfész
+            réteg a \textit{Python} protokollokra építkezik.
 
-        Ahogyan azt a fejezet elején is említettem a protokollokkal elérhető a \textit{struktúrált típusosság}
-        öröklődés beveztése nélkül. Ez nagyban leegyszerűsíti a kódot, ugyanis elhagyhatók a \textit{Pythonban}
-        megszokott \verb|@abstractmethod| függvény annotációk.
+            Ahogyan azt a fejezet elején is említettem a protokollokkal elérhető a \textit{struktúrált típusosság}
+            öröklődés beveztése nélkül. Ez nagyban leegyszerűsíti a kódot, ugyanis elhagyhatók a \textit{Pythonban}
+            megszokott \verb|@abstractmethod| függvény annotációk.
 
-        Ezek elkerülése nem csak a kódolvashatóságon javít, hanem a futás időn is. Ez a javaulás elenyésző ugyan de
-        attól még említésre méltó. A javulás annak köszönhető, hogy az \textit{abstract} annotációkat a
-        \textit{Python}, mint ahogyan minden más konstrukciót is, futás időben értékeli ki.
+            Ezek elkerülése nem csak a kódolvashatóságon javít, hanem a futás időn is. Ez a javaulás elenyésző ugyan de
+            attól még említésre méltó. A javulás annak köszönhető, hogy az \textit{abstract} annotációkat a
+            \textit{Python}, mint ahogyan minden más konstrukciót is, futás időben értékeli ki.
 
-        Ezzel szemben, a protokollokat a \textit{Python interpreter} futásidőben nem ellenőrzi. Az ellenőrzésükhöz
-        szükség van egy harmadik féltől származó típus ellenőrző alkalmazásra. Például, \textit{mypy}~\cite{mypy},
-        \textit{pyright}~\cite{pyright}, \textit{ty}~\cite{ty}.
+            Ezzel szemben, a protokollokat a \textit{Python interpreter} futásidőben nem ellenőrzi. Az ellenőrzésükhöz
+            szükség van egy harmadik féltől származó típus ellenőrző alkalmazásra. Például, \textit{mypy}~\cite{mypy},
+            \textit{pyright}~\cite{pyright}, \textit{ty}~\cite{ty}.
 
-        A protokollok egy szoftverarchitekturális szempontból, is előnyesek, mert egy tisztább megoldást kínálnak mint
-        az egyébként \textit{Pythonban} elérhető \textit{abstract} osztályok. Mivel nem osztályok és nincs szükség
-        öröklődésre, így adattagokat sosem kapnak az implementációk a protokolloktól.
+            A protokollok egy szoftverarchitekturális szempontból, is előnyesek, mert egy tisztább megoldást kínálnak
+            mint az egyébként \textit{Pythonban} elérhető \textit{abstract} osztályok. Mivel nem osztályok és nincs
+            szükség öröklődésre, így adattagokat sosem kapnak az implementációk a protokolloktól.
 
-        A protokollok hátránya egyedül a lefelé kasztolásnál jön elő, mert csak a \\ \verb|@runtime_checkable|
-        annotációval ellátott protokollok tesztelhetők futásidőben. Erre a felhasználásra ideálisabb \textit{abstract}
-        osztályokat alkalmazni.
+            A protokollok hátránya egyedül a lefelé kasztolásnál jön elő, mert csak a \\ \verb|@runtime_checkable|
+            annotációval ellátott protokollok tesztelhetők futásidőben. Erre a felhasználásra ideálisabb
+            \textit{abstract} osztályokat alkalmazni.

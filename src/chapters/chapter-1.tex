@@ -30,7 +30,7 @@ A megvalósított teszt keretrendszer a diplomamunkám kereteiben belül \textit
 készült el. Ugyanakkor a program architektúrája moduláris és fel van készítve más fordítóprogramok tesztelésére,
 további bővítmények implementálása által.
 
-\section{Kitekintés egyéb fordítóprogram teszt keretrendszerekre}
+\section{Kitekintés egyéb fordítóprogram teszt keretrendszerekre}\label{sec:ch1-outlook}
 
     Ha \textit{C/C++} fordítóprogramokról beszélünk, akkor sokak számára a \textit{GNU GCC}, \textit{LLVM Clang} juthat
     eszébe, \textit{Windows} felhasználoknak pedig az \textit{MSVC}.
@@ -66,7 +66,7 @@ további bővítmények implementálása által.
     \textit{Python} függvény megvalósításával, a szerző dinamikusan dönthet a teszteset futtatásáról. Ebből triviálisan
     adódik, hogy ha a szerző mégis szeretne egy makró rendszert a teszt forrásfájlokhoz, akkor lehetősége van azt
     implementálni. Ezen felül a \textit{SuperSet} lehetőséget add egyszerre több tesztcsomag futtatására is, valamint
-    elosztott több számítógépes működésre is. A \textbf{\ref{fig:comparison}. ábra} összehasonlítja az említett
+    elosztott több számítógépes működésre is. A \textbf{\ref{fig:chp1-comparison}. ábra} összehasonlítja az említett
     keretrendszereket a \textit{SuperSettel}.
 
     \begin{figure}[ht]
@@ -80,5 +80,5 @@ további bővítmények implementálása által.
             \textit{\textbf{SuperSet}} & Domain-specifikus & Konfiguráció nélkül elérhető          & Támogatott         \\
             \bottomrule
         \end{tabular}
-        \caption{\label{fig:comparison} A teszt kertrendszerek összehasonlítása}
+        \caption{\label{fig:chp1-comparison} A teszt kertrendszerek összehasonlítása}
     \end{figure}
