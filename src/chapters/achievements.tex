@@ -1,0 +1,63 @@
+\chapter{Eredmények és továbbfejlesztési lehetőségek}
+
+\section{Elért eredmények összefoglalása}
+
+    A \textit{SuperSet} projekt sikeresen megvalósította a kitűzött célokat, a megvalósított teszt keretrendszer egy
+    rugalmas, bővítményekkel kiegészíthető, könnyen konfigurálható rendszer lett. A megvalósítás során modern
+    technológiákat alkalmaztam, például a \textit{Python} nyelv típusellenőrzése, vagy az aszinkron esemény hurok
+    használata \textit{I/O} limitált hívások kiküszöbölésére.
+
+    A projekt során az alábbi eredményeket értem el:
+
+    \begin{itemize}
+        \item Sikeresen kialakítottam egy komplex, azonban könnyen használható és bővíthető konfigurációs rendszert a
+              teszt keretrendszer, és a tesztcsomagok paraméterezésére.
+        \item Megvalósítottam a teszt keretrendszer lokális és elosztott működési lehetőségét is, ezzel növelve a
+              potenciális elérhető hardverek kihasználtságát.
+        \item A rendszer implementálása során különös figyelemmel voltam a teljesítményre, hogy az implementációt adó
+              \textit{Python} nyelv ne korlátozza azt.
+        \item Létrehoztam egy testre szabható bővítmény rendszert, amely dinamikusan tölti be a tesztcsomagok
+              futtatásához szükséges parancsokat.
+        \item Megoldottam, hogy a keretrendszernek több különböző kimeneti formátuma is legyen, mind humán olvasható,
+              mind standard struktúrált \textit{JUnit XML} alapú.
+        \item Implementáltam egy flexibilis teszteset generáló alkalmazást, amely a keretrendszer számára kérésre elő
+              tud állítani \textit{fuzz} teszteket a \textit{Csmith} segítségével.
+        \item A megvalósított rendszer képes a teszteseteket, kiválasztani, kihagyni és futási eredményeik alapján
+              kategorizálni.
+    \end{itemize}
+    \pagebreak
+
+\section{Továbbfejlesztési lehetőségek}
+
+    Bár a jelenlegi implementáció teljes mértékben funkcionális és számos előnnyel rendelkezik a bemutatott egyéb
+    megoldásokkal szemben, bőven adódik lehetőség továbbfejlesztésre.
+
+    \begin{itemize}
+        \item \textbf{Makró építő:} A hasonló alkalmazásokkal való összevetésből kiderül, hogy a \\ \textit{SuperSet}
+              nem támogat teszt forrásfájl szintű makrózást natívan. Ugyan az implementációs lehetőseg meg van rá a
+              bővítmény rendszeren keresztül, mégis jobb volna egy beépített módszer amely opcionáéisan igénybe vehető.
+        \item \textbf{Web nézet:} A jelenleg támogatott kimenetek rendkívül hasznosak, azonban betöltésük igen
+              sok időt vesz igényben ha a futtatott tesztek száma nagy. Mivel a keretrendszer kimenete \textit{SQLite}
+              adatbázis, így érdemes lenne egy minimális webalkalmazást fejleszteni amely interaktív keresővel,
+              oldalakra bontva prezentálja az eredményeket.
+        \item \textbf{Hálózati logolás:} Az elosztott működés során a kliensek a \textit{log} üzeneteiket nem küldik el
+              a szerver számára így a szerver oldalán nem látható, hogy a kliensek hol tartanak a futtatásban. Ezeket
+              az üzeneteket érdemes lenne továbbítani a szerver számára.
+        \item \textbf{Hálózati fájl küldés:} A jelenlegi implementáció nem támogatja a teszteset fájlok küldését
+              hálózaton keresztül. Így a generáló alkalmazás kimenetét előbb egy másik úton kell eljuttatni a kliensek
+              felé ha futtatni szeretnénk elosztottan.
+        \item \textbf{Daemon üzemmód:} A szerver alkalmazás egyszeri konfiguráció betöltést hajt végre majd, ha
+              a kliensek végeztek a kiosztott tesztekkel akkor aggergálja az eredményeket és leáll. Egy jobb
+              implementáció volna, ha szervernek kéréseket lehetne küldeni konfigurációs fájlokkal, hogy mit futasson
+              és soha nem terminálna.
+        \item \textbf{Bővítmények dinamikus betöltése:} Jelenleg a bővítmény betöltés csak egyszer történik meg az
+              alkalmazás indulása után. A \textit{Daemon üzemmód} megvalósításához azonban elengedhetetlen extra
+              bővítmények futás idejű betöltése, hogy új konfigurációk új fordítóprogramokra adjanak támogatást.
+        \item \textbf{Csatlakozás külső adatbázishoz:} A kimeneti információ jelenleg egy \textit{SQLite} adatbázis
+              fájlban tárolódik el a futás végeztével. Egy jó lehetőség volna, ha az alkalmazás nem csak
+              \textit{SQLite} hanem bármilyen standard \textit{SQL} alapú adatbázishoz tudna csatlakozni és erdeményeit
+              publikálni. Ez jelentősen megkönnyítené a lehetséges web nézet implementációját is.
+        \item \textbf{További tesztgenerálók integrálása:} A \textit{Gekko} komponens jelenleg csak a \textit{Csmith} teszt
+              generáló alkalmazást kezeli, azonban léteznek egyéb alkalmazások is amelyek integrálására a kód készen
+              áll, viszont idő hiányában még nem valósult meg.
+    \end{itemize}
