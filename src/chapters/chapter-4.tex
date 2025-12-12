@@ -134,9 +134,9 @@
         \pagebreak
         \subsubsection{A szerver-kliens protokoll}
 
-            A szerver a kliensekkel egy jól meghatározott protokollon keresztül kommunikál, egy
-            \textit{WebSocket}~\cite{websocket} csatornán keresztül. A protokoll struktúráját az alábbi
-            \textbf{\ref{fig:protocol-buffer}. ábra} szemlélteti.
+            A szerver a kliensekkel egy jól meghatározott protokollon keresztül kommunikál, amelyet kifejezetten az
+            alkalmazás igényeihez terveztem. A kommunikáció egy \textit{WebSocket}~\cite{websocket} csatornán keresztül
+            történik. A protokoll struktúráját az alábbi \textbf{\ref{fig:protocol-buffer}. ábra} szemlélteti.
 
             \begin{figure}[ht]
                 \centering
@@ -164,23 +164,34 @@
 
                     % Segment size
                     \node at (-5, -2.5) {2};
-                    \node at (-4, -2.5) {1};
-                    \node at (-3, -2.5) {1};
+                    \node at (-4, -2.5) {3};
+                    \node at (-3, -2.5) {4};
                     \node at (0, -2.5) {N};
 
                     % Segment text
                     \node at (-6, 1) {\rotatebox{90}{\large\textbf{Protocol Version}}};
                     \node at (-4.5, 1) {\rotatebox{90}{\large\textbf{Receipt}}};
                     \node at (-3.5, 1) {\rotatebox{90}{\large\textbf{Kind}}};
-                    \node at (-1.5, 1) {\rotatebox{90}{\large\textbf{Buffer length}}};
-                    \node at (3, 1) {\rotatebox{45}{\large\textbf{Buffer data}}};
+                    \node at (-1.5, 1) {\rotatebox{90}{\large\textbf{Buffer Length}}};
+                    \node at (3, 1) {\rotatebox{45}{\large\textbf{Buffer Data}}};
+
+                    \node at (-6, 3.66) {\small<<int>>};
+                    \node at (-4.5, 3.66) {\small<<int>>};
+                    \node at (-3.5, 3.66) {\small<<int>>};
+                    \node at (-1.5, 3.66) {\small<<str>>};
+                    \node at (3, 3.66) {\small<<str>>};
                 \end{tikzpicture}
                 \vspace{-3mm}
                 \hrule
                 \caption{\label{fig:protocol-buffer} A protokoll csomag bájt mérete}
             \end{figure}
 
-            A protokoll csomag először \emph{2 bájtot} küld amiben a protokoll verziója van. Ez biztonsági okokból
+            A csomag a hálózati kommunikáció szabványos módja szerint, \textit{\foreignlanguage{american}{big-endian}}
+            bájtsorrendben van lekódolva. A csomagban lévő típusok egész számok és sztringek. A sztringek
+            \textit{UTF-8} kódoltak így nem érintettek a bájt sorrend problémában, mivel ez a kódolás egy bájtonként
+            olvassa a puffert.
+
+            A protokoll csomag először \emph{2 bájtot} küld amiben a protokoll verziója van. Ez biztonsági okokbólí
             szükséges. Ha a jövőben változtatni szeretnék a protokoll struktúráján akkor azt könnyen megtehetem, mert
             ha a verziók nem egyeznek akkor a kapcsolat nem épül fel.
 
@@ -202,10 +213,10 @@
                       kiküldésre minden kliensnek.
             \end{itemize}
 
-            \pagebreak
             A következő bájtokat a protokoll egy \textit{'\textbackslash{}n'} karakterig olvassa. Ha nullánál több bájtot
             olvasott, akkor annak tartalmát egy előjel nélküli egész számként kezeli ami a következő pufferben lévő adat
-            mennyiségét jelzi. Az előző listában \textit{*-al} megjelölt üzenet típusokhoz tartozik adat.
+            mennyiségét jelzi. Az előző listában \textit{*-al} megjelölt üzenet típusokhoz tartozik adat, azaz nem üres
+            a \textit{Buffer Data}.
 
             Végül a protokoll annyi bájtot olvas amennyi az előjel nélküli egész szám értéke. Ez az adat mindig
             \textit{JSON}~\cite{json} formátumban érkezik.
@@ -246,6 +257,6 @@ async def begin_client_work(
         \subsubsection{Összegzés}
 
             A protokoll mögötti tervezési konstrukció egy hibatűrő, és minimális rendszert alkot. A kommunikációra
-            tudatosan nem a \textit{HTTP}~\cite{http} protokollt választottam mert az sok fölösleges plusz információt
-            is átküld. Az implementált protokoll tökéletesen modellezi az elosztott keretrendszer invarianciáit, és
-            minimális adatot küld.
+            tudatosan nem a \textit{HTTP}~\cite{http} protokollt választottam mert az sok fölösleges plusz
+            információval rendelekezik, a megoldott problémával összevetve. Az implementált protokoll tökéletesen
+            modellezi az elosztott keretrendszer invarianciáit, és minimális adatot küld.
