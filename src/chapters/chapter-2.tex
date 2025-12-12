@@ -7,7 +7,7 @@ A \textit{SuperSet} egy elosztott tesz keretrendszer, amely Python 3.12~\cite{py
 verzió kezelés Git segítségével történt. A \textit{SuperSet} mind logikailag, mind modul szinten struktúrált. Ez a
 struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntartását és az implementációs részletek elrejtését.
 
-\section{A projekt felépítése}
+\section{A projekt felépítése}\label{sec:project-structure}
 
     Ebben a fejezetben röviden ismertetem a szoftver komponenseket, amelyek felépítik a \textit{SuperSet} elosztott
     teszt keretrendszert alkalmazást. Mélyebb működésükre, konkrét implementációs részleteikre, és az azokat
@@ -53,57 +53,46 @@ struktúráltság teszi lehetővé a különböző absztrakciós szintek fenntar
         \caption{\label{fig:component-sets} Szoftver komponens csoport diagram}
     \end{figure}
 
-    \subsection{A \textit{SuperSet} szoftver komponens}\label{sec:intro-superset}
+    A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a
+    \textit{ConfigManager} szoftver komponens által előállított tesztcsomagok futtatása, valamint a \textit{Gekko}
+    szoftver komponens által előállított \textit{fuzz} típusú tesztcsomagok futtatása is. Továbbá a
+    \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolataival és kizárásaival, így
+    megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite}~\cite{sqlite} adatbázisban tárolja.
 
-        A \textit{SuperSet} szoftver komponens a lokális futtatásért felelős fő komponens. Feladata a
-        \textit{ConfigManager} szoftver komponens által előállított tesztcsomagok futtatása, valamint a \textit{Gekko}
-        szoftver komponens által előállított \textit{fuzz} típusú tesztcsomagok futtatása is. Továbbá a
-        \textit{ConfigManagertől} megkapja a tesztekre érvényes beállításokat is, azok kapcsolataival és kizárásaival,
-        így megalkotja a futtatási mátrixot. Kimenetét egy \textit{SQLite}~\cite{sqlite} adatbázisban tárolja.
+    A \textit{SuperSetProducer} és a \textit{SuperSetConsumer} szoftver komponensek felelősek az elosztott működés
+    megvalósításáért.
 
-    \subsection{A \textit{SuperSetProducer} és a \textit{SuperSetConsumer} szoftver komponensek}\label{sec:intro-superset-prod-cons}
+    A \textit{SuperSetProducer} a szerver alkalmazás által kezelt sorba fogja rakni a kért tesztcsomagokat.
+    Gyakorlatilag a \textit{SuperSet} szoftver komponens által végzett munka első részét végzi, tehát a \textit{Gekko}
+    és a \textit{ConfigManager} szoftver komponensekkel kommunikál így előállítja a végső futtatási konfigurációt. Majd
+    a klienstől visszakapott eredményeket aggregálja.
 
-        Ez a két komponens felelős az elosztott működés megvalósításáért.
+    A \textit{SuperSetConsumer} a kliens alkalmazások oldalán van jelen. A szervertől kapott tesztcsomagokat osztja
+    fel, futtatja le a teszteseteket, majd a nyers eredményeket visszaküldi a szerver alkalmazásnak.
 
-        A \textit{SuperSetProducer} a szerver alkalmazás által kezelt sorba fogja rakni a kért tesztcsomagokat.
-        Gyakorlatilag a \textit{SuperSet} szoftver komponens által végzett munka első részét végzi, tehát a
-        \textit{Gekko} és a \textit{ConfigManager} szoftver komponensekkel kommunikál így előállítja a végső futtatási
-        konfigurációt. Majd a klienstől visszakapott eredményeket aggregálja.
+    A \textit{Gekko} szoftver komponens dinamikusan generál egy előre megadott mennyiségű \textit{fuzz} típusú
+    tesztcsomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal a
+    működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a kiemenetét
+    a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
+    \textit{Csmith}~\cite{csmith} programot használja, azonban könnyen bővíthető más generáló programokkal is.
 
-        A \textit{SuperSetConsumer} a kliens alkalmazások oldalán van jelen. A szervertől kapott tesztcsomagokat osztja
-        fel, futtatja le a teszteseteket, majd a nyers eredményeket visszaküldi a szerver alkalmazásnak.
+    A \textit{ConfigManager} szoftver komponens felelős a keretrendszer számára elérhetővé tenni a futás konfigurációs
+    fájlnak a tartalmát. Ez a komponens képes a konfigurációs fájlokból \textit{Python} primitív és aggregált típusokat
+    előállítani. A különböző konfigurációs értékekhez futás időben elérhető típusokat rendel, így a konfigurációs
+    fájlból olvasott nyers sztringek értelmezése személyre szabható. Ezzel a mechanizmussal különböző fordítóprogramok
+    igényeihez alakítható a konfigurációs fájl, akár teljesen különböző \textit{domain-specifikus nyelv} is
+    implementálható.
 
-    \subsection{A \textit{Gekko} szoftver komponens}
+    A \textit{Sut} szoftver komponens a tesztelt fordítóprogram futtatási parancsait definiálja. Három tesztelési mód
+    létezik, \emph{fordítási}, \emph{szerkesztési}, és \emph{futtatási}, ez utóbbi mód lehetőséget ad
+    \emph{keresztfordító programok} kimeneti fájljainak futtatására is. A komponens lehetőséget ad mind a három mód
+    parancsainak módosítására. A \textit{Sut} komponenseket egy bővítmény rendszer tölti be, így akár az alkalmazáson
+    kívülről is van lehetőség a tesztelési módok személyre szabására.
 
-        A \textit{Gekko} szoftver komponens dinamikusan generál egy előre megadott mennyiségű \textit{fuzz} típusú
-        tesztcsomagot. A komponens neve az angol \emph{Generate-Convert} szókapcsolatból ered. Ez a szókapcsolat utal a
-        működésére is. A \textit{Gekko} első lépésben egy \textit{fuzz} teszt generáló programot hív, amelynek a
-        kiemenetét a második lépésben a keretrendszer által használt formátumra hozza. A \textit{Gekko} jelenleg a
-        \textit{Csmith}~\cite{csmith} programot használja, azonban könnyen bővíthető más generáló programokkal is.
-
-    \subsection{A \textit{ConfigManager} szoftver komponens}\label{sec:intro-config-manager}
-
-        A \textit{ConfigManager} szoftver komponens felelős a keretrendszer számára elérhetővé tenni a futás
-        konfigurációs fájlnak a tartalmát. Ez a komponens képes a konfigurációs fájlokból \textit{Python} primitív és
-        aggregált típusokat előállítani. A különböző konfigurációs értékekhez futás időben elérhető típusokat rendel,
-        így a konfigurációs fájlból olvasott nyers sztringek értelmezése személyre szabható. Ezzel a mechanizmussal
-        különböző fordítóprogramok igényeihez alakítható a konfigurációs fájl, akár teljesen különböző
-        \textit{domain-specifikus nyelv} is implementálható.
-
-    \subsection{A \textit{Sut} szoftver komponens}
-
-        A \textit{Sut} szoftver komponens a tesztelt fordítóprogram futtatási parancsait definiálja. Három tesztelési
-        mód létezik, \emph{fordítási}, \emph{szerkesztési}, és \emph{futtatási}, ez utóbbi mód lehetőséget ad
-        \emph{keresztfordító programok} kimeneti fájljainak futtatására is. A komponens lehetőséget ad mind a három mód
-        parancsainak módosítására. A \textit{Sut} komponenseket egy bővítmény rendszer tölti be, így akár az
-        alkalmazáson kívülről is van lehetőség a tesztelési módok személyre szabására.
-
-    \subsection{A \textit{Reporter} szoftver komponens}\label{sec:intro-reporter}
-
-        A \textit{Reporter} szoftver komponens készít a \textit{SuperSet} komponens kimeneti \textit{SQLite}
-        adatbázisából, riportokat. Két mód létezik az első humán olvasható \textit{HTML} riportot készít, a második a
-        standard \textit{JUnit XML} formátumot használja. Ez utóbbi formátum más alkalmazások által is felismerhető így
-        lehető teszi az eredmények vizualizálását harmadik féltől származó szoftverekben is.
+    A \textit{Reporter} szoftver komponens készít a \textit{SuperSet} komponens kimeneti \textit{SQLite} adatbázisából,
+    riportokat. Két mód létezik az első humán olvasható \textit{HTML} riportot készít, a második a standard
+    \textit{JUnit XML} formátumot használja. Ez utóbbi formátum más alkalmazások által is felismerhető így lehető teszi
+    az eredmények vizualizálását harmadik féltől származó szoftverekben is.
 
 \section{Összegzés}\label{sec:ch2-summary}
 
