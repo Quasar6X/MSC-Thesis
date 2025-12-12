@@ -1,31 +1,4 @@
-\chapter{Eredmények és továbbfejlesztési lehetőségek}
-
-\section{Elért eredmények összefoglalása}
-
-    A \textit{SuperSet} projekt sikeresen megvalósította a kitűzött célokat, a megvalósított teszt keretrendszer egy
-    rugalmas, bővítményekkel kiegészíthető, könnyen konfigurálható rendszer lett. A megvalósítás során modern
-    technológiákat alkalmaztam, például a \textit{Python} nyelv típusellenőrzése, vagy az aszinkron esemény hurok
-    használata \textit{I/O} limitált hívások kiküszöbölésére.
-
-    A projekt során az alábbi eredményeket értem el:
-
-    \begin{itemize}
-        \item Sikeresen kialakítottam egy komplex, azonban könnyen használható és bővíthető konfigurációs rendszert a
-              teszt keretrendszer, és a tesztcsomagok paraméterezésére.
-        \item Megvalósítottam a teszt keretrendszer lokális és elosztott működési lehetőségét is, ezzel növelve a
-              potenciális elérhető hardverek kihasználtságát.
-        \item A rendszer implementálása során különös figyelemmel voltam a teljesítményre, hogy az implementációt adó
-              \textit{Python} nyelv ne korlátozza azt.
-        \item Létrehoztam egy testre szabható bővítmény rendszert, amely dinamikusan tölti be a tesztcsomagok
-              futtatásához szükséges parancsokat.
-        \item Megoldottam, hogy a keretrendszernek több különböző kimeneti formátuma is legyen, mind humán olvasható,
-              mind standard struktúrált \textit{JUnit XML} alapú.
-        \item Implementáltam egy flexibilis teszteset generáló alkalmazást, amely a keretrendszer számára kérésre elő
-              tud állítani \textit{fuzz} teszteket a \textit{Csmith} segítségével.
-        \item A megvalósított rendszer képes a teszteseteket, kiválasztani, kihagyni és futási eredményeik alapján
-              kategorizálni.
-    \end{itemize}
-    \pagebreak
+\chapter{Összegzés}
 
 \section{Továbbfejlesztési lehetőségek}
 
@@ -61,3 +34,31 @@
               generáló alkalmazást kezeli, azonban léteznek egyéb alkalmazások is amelyek integrálására a kód készen
               áll, viszont idő hiányában még nem valósult meg.
     \end{itemize}
+
+\section{Elért eredmények összefoglalása}
+
+    A \textit{SuperSet} projekt sikeresen megvalósította a kitűzött célokat. A megvalósítás során modern technológiákat
+    alkalmaztam, például a \textit{Python} nyelv típusellenőrzése, vagy az aszinkron esemény hurok használata
+    \textit{I/O} limitált hívások kiküszöbölésére.
+
+    A projekt során az alábbi eredményeket értem el:
+
+    \begin{itemize}
+        \item Sikeresen kialakítottam egy komplex, azonban könnyen használható és bővíthető konfigurációs rendszert a
+              teszt keretrendszer, és a tesztcsomagok paraméterezésére.
+        \item Megvalósítottam a teszt keretrendszer lokális és elosztott működési lehetőségét is, ezzel növelve a
+              potenciális elérhető hardverek kihasználtságát.
+        \item A rendszer implementálása során különös figyelemmel voltam a teljesítményre, hogy az implementációt adó
+              \textit{Python} nyelv ne korlátozza azt.
+        \item Létrehoztam egy testre szabható bővítmény rendszert, amely dinamikusan tölti be a tesztcsomagok
+              futtatásához szükséges parancsokat.
+        \item Megoldottam, hogy a keretrendszernek több különböző kimeneti formátuma is legyen, mind humán olvasható,
+              mind standard struktúrált \textit{JUnit XML} alapú.
+        \item Implementáltam egy flexibilis teszteset generáló alkalmazást, amely a keretrendszer számára kérésre elő
+              tud állítani \textit{fuzz} teszteket a \textit{Csmith} segítségével.
+        \item A megvalósított rendszer képes a teszteseteket, kiválasztani, kihagyni és futási eredményeik alapján
+              kategorizálni.
+    \end{itemize}
+
+    A megvalósított teszt keretrendszer egy rugalmas, bővítményekkel kiegészíthető, könnyen konfigurálható rendszer
+    lett, amely hatékonyan használj ki a futtató hardverek adottságait.
