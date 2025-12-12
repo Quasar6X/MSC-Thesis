@@ -60,10 +60,10 @@ class Sut(ABC):
         aggregációihoz még hozzáveszi a fordítoprogram bementi argumentumai és a \textit{STDIN} bemenetére érkező
         bájtokat, majd a végeredményből egy \textit{SHA-512 hasht}~\cite{sha512} generál.
 
-        Az adatbázis ezt a \textit{hasht} és futáseredményt az alábbi \textbf{\ref{fig:cache-schema}. ábrán} látható
-        táblában tárolja.
+        Az adatbázis ezt a \textit{hasht} és futáseredményt az alábbi \textbf{\ref{fig:cache-schema}.\ táblázatban}
+        látható táblában tárolja.
 
-        \begin{figure}[ht]
+        \begin{table}[ht]
             \centering
             \begin{tabular}{ll}
                 \toprule
@@ -83,7 +83,7 @@ class Sut(ABC):
                 \bottomrule
             \end{tabular}
             \caption{\label{fig:cache-schema} A \textit{CacheTarget} adatbázis séma}
-        \end{figure}
+        \end{table}
 
         A rendszer előnye, hogy a sokáig tartó futtatandó tesztesetek futásidejét drasztikusan tudja csökkenteni.
         Kifejezetten akkor a leghasznosabb ha a kimeneti \textit{ELF} futtatható szimulátorban fut, mert a szimulátorok

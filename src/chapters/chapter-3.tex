@@ -185,18 +185,20 @@ class ConfigGenerator[T: Target, O: Option]:
 
             Hasnolítsuk össze a~\ref{sec:ch1-outlook} fejezetben megismert programok konfigurációs lehetőségeivel a
             \textit{ConfigManager} által nyújtott lehetőségeket. Az összehasonlítás a
-            \textbf{\ref{fig:chp3-comparison}. ábárn} látható.
+            \textbf{\ref{fig:chp3-comparison}.\ táblázatban} látható.
 
-            \begin{figure}[ht]
+            \begin{table}[ht]
                 \centering
-                \begin{tabular}{l*{3}{p{3.6cm}}}
+                \begin{tabular}{ l *{2}{p{3.6cm}} >{\centering\arraybackslash}p{3.6cm} }
                     \toprule
-                                               & Konfigurációs fájl & Szintaxis  independens       & Hierarchikus konfiguráció \\
+                                               & Konfigurációs fájl & Hierarchikus \newline konfiguráció & Szintaxis \newline independens\footnotemark{} \\
                     \midrule
-                    \textit{DejaGnu}           & Szkript            & Nehezen elérhető             & Mappa struktúrában        \\
-                    \textit{Lit}               & Szkript            & Nehezen elérhető             & Mappa Struktúrában        \\
-                    \textit{\textbf{SuperSet}} & Leíró nyelv        & Konfiguráció nélkül elérhető & A leíró fájlon belül      \\
+                    \textit{DejaGnu}           & Szkript            & Mappa struktúrában                 &                                               \\
+                    \textit{Lit}               & Szkript            & Mappa Struktúrában                 &                                               \\
+                    \textit{\textbf{SuperSet}} & Leíró fájl         & A leíró fájlon belül               & \textbf{X}                                    \\
                     \bottomrule
                 \end{tabular}
                 \caption{\label{fig:chp3-comparison} A teszt kertrendszerek összehasonlítása}
-            \end{figure}
+            \end{table}
+
+            \footnotetext{A generált kapcsoló konfiguráció a fordítóprogram parancssori szintaktikájától független.}
