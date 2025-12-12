@@ -5,13 +5,9 @@
 \setmainfont{Times New Roman}
 \def\magyarOptions{defaults=hu-min}
 \usepackage[magyar]{babel}
-\usepackage{amsthm, amssymb, amsmath}
 \usepackage{booktabs}
 \usepackage{diagbox}
-\usepackage{csquotes}
-\renewcommand{\mkbegdispquote}[2]{\openautoquote}
-\renewcommand{\mkenddispquote}[2]{\closeautoquote#1#2}
-\usepackage{enumerate, graphicx, xcolor}
+\usepackage{enumerate, graphicx}
 \usepackage[dvipsnames]{xcolor}
 \definecolor{LightGray}{gray}{0.9}
 \usepackage{minted}
@@ -45,6 +41,9 @@
 
 \usepackage{fancyhdr}
 \usepackage{hyperref}
+\usepackage{csquotes}
+\renewcommand{\mkbegdispquote}[2]{\openautoquote}
+\renewcommand{\mkenddispquote}[2]{\closeautoquote#1#2}
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
@@ -84,18 +83,6 @@
 }
 \fancypagestyle{plain}[fancy]{}
 
-
-\newtheorem{theo}{tétel}[section]
-\newtheorem{defin}[theo]{definíció}
-\newtheorem{lemma}[theo]{lemma}
-\newtheorem{all}[theo]{állítás}
-\newtheorem{kov}[theo]{következmény}
-
-\theoremstyle{definition}
-\newtheorem{definition}[theo]{definíció}
-
-\theoremstyle{remark}
-\newtheorem{megj}[theo]{megjegyzés}
 
 \date{today}
 \hoffset -1in
