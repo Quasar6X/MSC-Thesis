@@ -40,13 +40,13 @@ generálható \textit{HTML} jelentés, esetleg \textit{JUnit XML}.
     perzisztens kommunikáció épül fel. Ez a működés hasonló a \textit{\foreignlanguage{american}{HTTP Keep-Alive
     header}} működéséhez.
 
-    A szervel alkalmazás is vár a klienskere indítás után. Terminálni akkor fog amikor az utolsó kliens is
-    lecsatlakozott. Ha a teljes futás végbe ment akkor a lecsatlakozást a szerver kezdeményezi, ha viszont minden
-    kliens a futtatás vége előtt nem várt módon szakítja meg a kapcsolatot akkor a szerver hibával fog leállni.
+    A szerver alkalmazás is vár a kliensekere indítás után. Terminálni akkor fog, amikor az utolsó kliens is
+    lecsatlakozott. Ha a teljes futás végbement, akkor a lecsatlakozást a szerver kezdeményezi, ha viszont minden
+    kliens a futtatás vége előtt nem várt módon szakítja meg a kapcsolatot, akkor a szerver hibával fog leállni.
 
-    A kliensek és a szerver is tárol \textit{log} üzeneteket amelyeket szintén futás közben is a kiírnak valamint
-    fájlokban is megtalálhatóak. A kliensek nem küldik vissza a \textit{log} üzeneteket a szerver felé így azokat egy
-    manuálisan érdemes összegyűjteni.
+    A kliensek és a szerver is tárol \textit{log} üzeneteket, amelyeket szintén futás közben a \textit{konzolra}
+    kiírnak, valamint fájlokban is megtalálhatóak. A kliensek nem küldik vissza a \textit{log} üzeneteket a szerver
+    felé, így azokat manuálisan érdemes összegyűjteni.
 
-    A teszt eredmények természetesen a szerver alkalamzás oldalán lesznek összegyűjtve a lokális futtatással megegyező
+    A teszt eredmények természetesen a szerver alkalmazás oldalán lesznek összegyűjtve a lokális futtatással megegyező
     sémájú \textit{SQLite} adatbázisban.

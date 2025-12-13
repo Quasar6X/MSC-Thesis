@@ -175,15 +175,15 @@ class ConfigGenerator[T: Target, O: Option]:
         beolvasható, amelynek értéke később felhasználható a tesztesetek futtatása során. Ez triviálisan elérhető az
         egységes, \textit{.INI} alapú struktúra által.
 
-        A tesztesetek kiválasztása is kényelmes \textit{MATRIX} és a \textit{CONSTRAINTS} mezőkön keresztül. A
+        A tesztesetek kiválasztása is kényelmes a \textit{MATRIX} és a \textit{CONSTRAINTS} mezőkön keresztül. A
         \textit{MATRIX} beállítás segítségével rendszerszinten felírható az összes kívánt \textit{BuildOption}
         kombináció, így könnyen lefedhetők komplex konfigurációs terek. A \textit{CONSTRAINTS} szintaxis pedig lehetővé
         teszi, hogy tesztcsomagonként vagy kapcsolószinten megszorításokat adjunk meg, ezzel az exponenciális
-        kombinációs robbanást célzottan visszavágja.
+        kombinációs robbanást célzottan visszavágjuk.
 
-        \subsubsection{Összehasnlítás más keretrendszerek konfigurációs megoldásaival}
+        \subsubsection{Összehasonlítás más keretrendszerek konfigurációs megoldásaival}
 
-            Hasnolítsuk össze a~\ref{sec:ch1-outlook} fejezetben megismert programok konfigurációs lehetőségeivel a
+            Hasonlítsuk össze a~\ref{sec:ch1-outlook} fejezetben megismert programok konfigurációs lehetőségeivel a
             \textit{ConfigManager} által nyújtott lehetőségeket. Az összehasonlítás a
             \textbf{\ref{fig:chp3-comparison}.\ táblázatban} látható.
 
@@ -198,7 +198,7 @@ class ConfigGenerator[T: Target, O: Option]:
                     \textit{\textbf{SuperSet}} & Leíró fájl         & A leíró fájlon belül               & {\dbfont\textbf{✓}}                           \\
                     \bottomrule
                 \end{tabular}
-                \caption{\label{fig:chp3-comparison} A teszt kertrendszerek összehasonlítása}
+                \caption{\label{fig:chp3-comparison} A teszt keretrendszerek összehasonlítása}
             \end{table}
 
             \footnotetext{A generált kapcsoló konfiguráció a fordítóprogram parancssori szintaktikájától független.}

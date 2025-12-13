@@ -33,40 +33,40 @@ további bővítmények implementálása által.
 \section{Egyéb fordítóprogram teszt keretrendszerek}\label{sec:ch1-outlook}
 
     Ha \textit{C/C++} fordítóprogramokról beszélünk, akkor sokak számára a \textit{GNU GCC}, \textit{LLVM Clang} juthat
-    eszébe, \textit{Windows} felhasználoknak pedig az \textit{MSVC}.
+    eszébe, \textit{Windows} felhasználóknak pedig az \textit{MSVC}.
 
     Az előbbi két fordítóprogram nyílt forráskódú teszt keretrendszereket alkalmaz, így azokat veszem összehasonlítási
     alapnak. Mielőtt összehasonlítanám velük a dolgozat tárgyát képző teszt keretrendszert, egy rövid áttekintést
     nyújtok funkcióik felett.
 
     A \textit{GNU GCC} a \textit{DejaGnu} teszt keretrendszert alkalmazza. Ez a teszt keretrendszer a nem túl ismert
-    \textit{Expect} keretrendszert használja amely \textit{Tcl} nyelvben készült. Nem csak parancssori, hanem
-    interaktív programokat is képes tesztelni. A teszt forrásokat egy meghatározott mappa struktúrába kell rendezni,
+    \textit{Expect} keretrendszert használja, amely \textit{Tcl} nyelvben készült. Nem csak parancssori, hanem
+    interaktív programokat is képes tesztelni. A teszt forrásokat egy meghatározott mappastruktúrába kell rendezni,
     ahol a különböző \textit{site.exp} fájlokkal lehet mappa szintű konfigurációt megadni. A teszteset források
     tartalmazzák a teszt futtatásához szükséges makrókat. A makrók maguk pedig \textit{Tcl} szkript darabok.
 
     Az \textit{LLVM Clang} a \textit{Lit (LLVM Integrated Tester)} teszt keretrendszert alkalmazza. Ez a teszt
     keretrendszer \textit{Pythonban} készült. Parancssori alkalmazások tesztelését teszi lehetővé. A teszt forrásokat
-    ennél a keretrendszernél is egy meghatározott mappa struktúrában kell tárolni. Hierarchikus konfigurációra itt is
+    ennél a keretrendszernél is egy meghatározott mappastruktúrában kell tárolni. Hierarchikus konfigurációra itt is
     van lehetőség a \textit{lit.cfg.py, lit.site.cfg.py, lit.local.cfg.py} fájlok formájában. A tesztesetek itt is a
     teszt forrásokba ágyazott makrókkal futtathatók. Ezek a makrók egy \textit{shell} parancssorhoz hasonló
     szintaktikát alkalmaznak.
 
-    Az említett megoldások, rendkívül hasonlóak. Hierarchikus mappa szerkezetet, és \\ teszt forrás makrókat
-    alkalmaznak a cél elérése érdekében. Mivel nyújt többet ehhez képest a \textit{SuperSet}?
+    Az említett megoldások rendkívül hasonlóak. Hierarchikus mappaszerkezetet, és \\ teszt forrás makrókat alkalmaznak
+    a cél elérése érdekében. Mivel nyújt többet ehhez képest a \textit{SuperSet}?
 
-    Ezzel szemben, a \textit{SuperSet} nem követel meg semmilyen teszt forrás hierarchiát, se mappa struktúrát, se
-    makrókat. Helyettük egy bővítmény rendszert kínál a teszcsomag szerzőnek, hogy a teszteknek legmegfelelőbb
-    kontextust alakíthassa ki. A szerzőnek csupán egyetlen fájlt kell kötelezően megadnia, ez a \textit{SET} fájl
+    Ezzel szemben a \textit{SuperSet} nem követel meg semmilyen teszt forrás hierarchiát, se mappastruktúrát, se
+    makrókat. Helyettük egy bővítmény rendszert kínál a tesztcsomag szerzőnek, hogy a teszteknek legmegfelelőbb
+    kontextust alakíthassa ki. A szerzőnek csupán egyetlen fájlt kell kötelezően megadnia, ez a \textit{SET} fájl,
     amelyben soronként a tesztesetek elérési útja található, ez gyakorlatilag a tesztcsomag definíció. Ezután a
     bővítmény rendszerben két ponton módosítható a futás kontextusa. Az első, hogy lehetőség van egy hierarchikus
-    konfigurációs fájl beolvasásra, amelynek értékei \emph{domain-specifikusak}, tehát a szerző olyan mezőket vesz fel,
-    a beépítetteken kívül amilyenekre szüksége van. Itt érdemes megjegyezni, hogy a hierarchia a konfigurációs fájlon
-    belül van kifejezve és nem a mappa struktúra által. A második pont pedig a teszt futtatása, ahol pár egyszerű
-    \textit{Python} függvény megvalósításával, a szerző dinamikusan dönthet a teszteset futtatásáról. Ebből triviálisan
+    konfigurációs fájl beolvasásra, amelynek értékei \emph{domain-specifikusak}, tehát a szerző olyan mezőket vesz fel
+    a beépítetteken kívül, amilyenekre szüksége van. Itt érdemes megjegyezni, hogy a hierarchia a konfigurációs fájlon
+    belül van kifejezve és nem a mappastruktúra által. A második pont pedig a teszt futtatása, ahol pár egyszerű
+    \textit{Python} függvény megvalósításával a szerző dinamikusan dönthet a teszteset futtatásáról. Ebből triviálisan
     adódik, hogy ha a szerző mégis szeretne egy makró rendszert a teszt forrásfájlokhoz, akkor lehetősége van azt
     implementálni. Ezen felül a \textit{SuperSet} lehetőséget add egyszerre több tesztcsomag futtatására is, valamint
-    elosztott több számítógépes működésre is. A \textbf{\ref{fig:chp1-comparison}.\ táblázat} összehasonlítja az
+    elosztott több számítógépes működésre is. Az \textbf{\ref{fig:chp1-comparison}.\ táblázat} összehasonlítja az
     említett keretrendszereket a \textit{SuperSettel}.
 
     \begin{table}[ht]
@@ -80,5 +80,5 @@ további bővítmények implementálása által.
             \textit{\textbf{SuperSet}} & Domain-specifikus & Konfiguráció nélkül elérhető          & Támogatott         \\
             \bottomrule
         \end{tabular}
-        \caption{\label{fig:chp1-comparison} A teszt kertrendszerek összehasonlítása}
+        \caption{\label{fig:chp1-comparison} A teszt keretrendszerek összehasonlítása}
     \end{table}
