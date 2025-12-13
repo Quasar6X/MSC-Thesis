@@ -28,11 +28,11 @@
             \centering
             \begin{tabular}{lccc}
                 \toprule
-                \diagbox{Work}{Comp.} & \textit{SuperSet} & \textit{Consumer} & \textit{Producer} \\
+                \diagbox{Work}{Comp.} & \textit{SuperSet}   & \textit{Consumer}   & \textit{Producer}   \\
                 \midrule
-                Create job            & \textbf{X}        & \textbf{X}        &                   \\
-                Do job                & \textbf{X}        & \textbf{X}        &                   \\
-                Report job result     & \textbf{X}        &                   & \textbf{X}        \\
+                Create job            & {\dbfont\textbf{✓}} & {\dbfont\textbf{✓}} &                     \\
+                Do job                & {\dbfont\textbf{✓}} & {\dbfont\textbf{✓}} &                     \\
+                Report job result     & {\dbfont\textbf{✓}} &                     & {\dbfont\textbf{✓}} \\
                 \bottomrule
 
             \end{tabular}
@@ -213,10 +213,10 @@
                       kiküldésre minden kliensnek.
             \end{itemize}
 
-            A következő bájtokat a protokoll egy \textit{'\textbackslash{}n'} karakterig olvassa. Ha nullánál több bájtot
-            olvasott, akkor annak tartalmát egy előjel nélküli egész számként kezeli ami a következő pufferben lévő adat
-            mennyiségét jelzi. Az előző listában \textit{*-al} megjelölt üzenet típusokhoz tartozik adat, azaz nem üres
-            a \textit{Buffer Data}.
+            A következő bájtokat a protokoll egy \textit{'\textbackslash{}n'} karakterig olvassa. Ha nullánál több
+            bájtot olvasott, akkor annak tartalmát egy előjel nélküli egész számként kezeli ami a következő pufferben
+            lévő adat mennyiségét jelzi. Az előző listában \textit{*-al} megjelölt üzenet típusokhoz tartozik adat,
+            azaz nem üres a \textit{Buffer Data}.
 
             Végül a protokoll annyi bájtot olvas amennyi az előjel nélküli egész szám értéke. Ez az adat mindig
             \textit{JSON}~\cite{json} formátumban érkezik.
