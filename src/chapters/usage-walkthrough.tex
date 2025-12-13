@@ -1,4 +1,52 @@
 \chapter{A teszt keretrendszer futtatása}
 
-Ebben a fejezetben egy példán keresztül bemutatom, hogyan lehet használni az alkalmazást mind elosztott, mind lokális
-futtatás során.
+Ebben a fejezetben bemutatom, hogyan lehet használni az alkalmazást mind elosztott, mind lokális futtatás során. A
+diplomamunkához csatolt tömörített állomány \textit{examples} mappájában található pár program kimenet, valamit az
+alkalmazás teljese implementációja.
+
+A futtatáshoz mind lokális mind elosztott esetben, az alábbi elemekre van szükség:
+
+\begin{itemize}
+    \item Megfelelő \textit{Python} környezetre a \textit{pyproject.toml} fájlban megadott függőségekkel együtt.
+          Célszerű a \textit{Python} által nyújtott vrituális környezeteket alkalmazni. A környezetbe a
+          \textit{SuperSet} alkalmazást is telepíteni kell.
+    \item Egy bemeneti tesztcsomagra és a hozzá tartozó \textit{SET} fájlra. Definiálható mindkettő manuálisan is,
+          viszont alkalmazható a \textit{Gekko} program, amely generál egy \textit{fuzz} tesztesetekből álló csomagot.
+    \item Egy konfiguráció, amely megadja a keretrendszer számára, hogy a generált tesztcsomagot használja. Itt kell
+          megadnia a kapcsolókat is amikkel a fordítóprogramot tesztelni szeretnénk, valamint a \emph{mátrixot} és a
+          \emph{kivételeket} is.
+    \item Egy \textit{Sut} implementációra amely összeállítja a futtatáshoz szükséges parancsokat a konfigurációból.
+    \item Egy fordítóprogramra amely kompatibilis a \textit{Sut} által összeállított parancsokkal.
+    \item Végezetül egy szimulátorra ha a fordítóprogram által generált futtatható nem a \textit{host} gépre készült.
+\end{itemize}
+
+A \textit{SuperSet} teszt keretrendszer egy parancssori program így futtatni is onnan kell. A futás közben több
+\textit{log} üzenetet is küld a belső állapotáról. A futtatás során létrejön több \textit{.log} fájl is a kiadott
+üzenetekkel, valamint létrejön az \textit{SQLite} adatbázis az eredményekkel. Az eredmény adatbázisból könnyen
+generálható \textit{HTML} jelentés, esetleg \textit{JUnit XML}.
+
+\pagebreak
+\section{Extra lépések elosztott futtatáshoz}
+
+    Az elosztott futtatás során szükséges pár extra lépést megtenni a zökkenő mentes működés érdekében.
+
+    Fontos, hogy a szerver és a kliensek ugyan azokat a tesztcsomagokat lássák, mivel a szerver nem küldi el a
+    teszteset fájlokat csak a kérést, hogy melyik legyen futtatva. Hasonlóan, a kliensek között meg kell egyeznie a
+    \textit{Sut} bővítményeknek, különben véletlenszerű hibák fognak bekövetkezni. A konfigurációt a szerver megosztja
+    a klienssel így az nem igényel különösebb figyelmet.
+
+    A kliens alkalmazások indítás után várnak a szerver alkalmazásra, és többször is megkísérlik a csatlakozást. Ha
+    csatlakoztak, akkor a teszt futtatás végével a szerver fogja explicit lecsatlakoztatni a klienseket, tehát
+    perzisztens kommunikáció épül fel. Ez a működés hasonló a \textit{\foreignlanguage{american}{HTTP Keep-Alive
+    header}} működéséhez.
+
+    A szervel alkalmazás is vár a klienskere indítás után. Terminálni akkor fog amikor az utolsó kliens is
+    lecsatlakozott. Ha a teljes futás végbe ment akkor a lecsatlakozást a szerver kezdeményezi, ha viszont minden
+    kliens a futtatás vége előtt nem várt módon szakítja meg a kapcsolatot akkor a szerver hibával fog leállni.
+
+    A kliensek és a szerver is tárol \textit{log} üzeneteket amelyeket szintén futás közben is a kiírnak valamint
+    fájlokban is megtalálhatóak. A kliensek nem küldik vissza a \textit{log} üzeneteket a szerver felé így azokat egy
+    manuálisan érdemes összegyűjteni.
+
+    A teszt eredmények természetesen a szerver alkalamzás oldalán lesznek összegyűjtve a lokális futtatással megegyező
+    sémájú \textit{SQLite} adatbázisban.
