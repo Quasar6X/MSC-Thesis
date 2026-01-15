@@ -22,6 +22,7 @@ RUN apt-get update \
     texlive-extra-utils=2024.20250309* \
     texlive-latex-extra=2024.20250309* \
     texlive-bibtex-extra=2024.20250309* \
+    texlive-fonts-extra=2024.20250309* \
     texlive-lang-all=2024.20250309* \
     ttf-mscorefonts-installer=3.8.1* \
     fontconfig=2.15.0* \
@@ -40,7 +41,7 @@ RUN apt-get update \
     && fc-cache -fv
 
 # latexindent modules
-RUN curl -L http://cpanmin.us | perl - App::cpanminus \
+RUN curl -L https://cpanmin.us/ | perl - App::cpanminus \
     && cpanm Log::Dispatch::File \
     && cpanm YAML::Tiny \
     && cpanm File::HomeDir \

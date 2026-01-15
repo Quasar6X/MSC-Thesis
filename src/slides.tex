@@ -1,0 +1,211 @@
+\documentclass[aspectratio=169,9pt]{beamer}
+\usepackage{fontspec}
+\setsansfont[Ligatures=Required]{JetBrains Mono}
+\usepackage[magyar]{babel}
+\usepackage[scale=1]{ccicons}
+\usepackage{tabto}
+\NumTabs{8}
+\usepackage{tasks}
+
+\title{SuperSet}
+\subtitle{Elosztott fordítóprogram teszt keretrendszer}
+\author[SzD]{Szűcs Dániel}
+\institute{Szegedi Tudományegyetem}
+\date{\today}
+\titlegraphic{\includegraphics[width=10cm]{assets/slides-hero.png}}
+
+
+\usetheme[
+    usesourcefonts=false,
+    sectionstyle=style2,
+    titlestyle=style2,
+    slidestyle=cyber,
+    headingcolor=theme,
+]{trigon}
+
+\setbeamerfont{framesubtitle}{size=\footnotesize}
+\setbeamercolor{framesubtitle}{fg=gray}
+\makeatletter
+\setbeamertemplate{footline}{
+    \hbox{
+        \hspace*{\beamer@leftmargin}
+        \begin{beamercolorbox}[wd=.45\paperwidth]{title in head/foot}
+            \color{gray}
+            SuperSet
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[wd=.3\paperwidth]{page number in head/foot}
+            \insertframenumber{}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[wd=.25\paperwidth]{page number in head/foot}
+            CC BY-NC-SA 4.0 \ccbyncsa{}
+        \end{beamercolorbox}
+        \hspace*{\beamer@rightmargin}
+    }
+    \vspace*{1em}
+}
+\makeatother
+\setbeamercolor{alerted text}{use={example text},fg=example text.fg}
+
+{\usebeamercolor{example text}}
+\settasks{
+    label-width=14pt,
+    label-offset=0pt,
+    item-indent=2em,
+    label=\color{example text.fg}\blacktriangleright{},
+}
+
+\begin{document}
+\titleframe{}
+
+\section{Bevezetés}
+    \begin{frame}{Bevezetés}
+        \usebeamertemplate*{triangle}
+        \onslide<1>{A \alert{SuperSet} egy elosztott fordítóprogram teszt keretrendszer modern Python alapokon.}
+
+        \vspace{12pt}
+        Technológiai alapok:
+
+        \only<1>{
+            \begin{itemize}
+                \item Python 3.12
+                \item SQLite
+                \item XML, HTML
+                \item WebSocket
+            \end{itemize}
+        }
+
+        \only<2>{
+            \begin{itemize}
+                \item Python 3.12 \tab{} => implementációs nyelv
+                \item SQLite \tab{} \tab{} => eredmények tárolása
+                \item XML, HTML \tab{} => report formátumok
+                \item WebSocket \tab{} => kliens-szerver kommunikáció
+            \end{itemize}
+        }
+    \end{frame}
+
+\section{Motiváció}
+
+    \begin{frame}{Motiváció}{Különbségek alternatív megoldásokhoz képest}
+        Természetesen a \alert{SuperSet} előtt is léteztek megoldások:
+        \begin{tasks} (2)
+            \task{} \textit{GCC DejaGNU}
+            \task{} \textit{LLVM Lit}
+        \end{tasks}
+
+        A \alert{SuperSet} azonban többet kínál ezen megoldásoknál:
+        \begin{tasks} (2)
+            \task{} Bővíthető \textit{DSL} konfiguráció
+            \task{} Bővítmény rendszer
+            \task{} Caching stratégia
+            \task{} Report generálás
+            \task{} Elosztott működés
+            \task{} Teszt generálás
+        \end{tasks}
+    \end{frame}
+
+    \begin{frame}{Motiváció}{Erőforrás kihasználás}
+        A \alert{SuperSet} fő motivációja az erőforrások jobb kihasználása.
+
+        \vspace{12pt}
+        \begin{columns}[T]
+            \begin{column}{.475\textwidth}
+                A probléma:
+
+                \begin{itemize}
+                    \item Rengeteg teszt eset \textit{\~{}250\,000}
+                    \item Még több kapcsoló kombináció:
+                          \begin{tasks} (2)
+                              \task{} Target
+                              \task{} OptLevel
+                              \task{} ABI
+                              \task{} \dots
+                          \end{tasks}
+                    \item \dots exponenciális robbanás
+                \end{itemize}
+            \end{column}
+
+            \begin{column}{.475\textwidth}
+                Futásidőt redukáló tényezők:
+                \begin{itemize}
+                    \item Teszcsomagok közötti átfedés
+                    \item Fordítási idejű tesztek (nincs szimulátor)
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{frame}
+
+\section{Implementáció}
+
+    \begin{frame}{Implementáció}{Standard és bővíthető konfiguráció}
+        \begin{itemize}
+            \item Mappa struktúra független
+            \item Hierarchikus konfigurálhatóság az \textit{.INI szekciók} által
+            \item Teszt redukciós beállítások: \textit{MATRIX, CONSTRAINTS}
+            \item Lehetőség saját kapcsolók definiálására \textit{(DSL)}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Implementáció}{Tesztgenerálás}
+        \begin{itemize}
+            \item Lehetőség tesztgeneráló alkalmazások integrálására
+                  \begin{itemize}
+                      \item Jelenleg: \textit{Csmith}
+                  \end{itemize}
+            \item A tesztesetek formátuma átalakításra kerül a \alert{SuperSet} formátumra
+            \item Teszteset validálás host fordítókkal
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Implementáció}{Bővítmény rendszer}
+        A bővítmény rendszer lehetőséget ad a tesztcsomagok futtatási parancsainak személyreszabására, különböző
+        fordítóprogramok számára.
+
+        \vspace{12pt}
+        \begin{itemize}
+            \item Teszt életciklus kezelés
+            \item Cache stratégia meghatározás
+            \item Futás idejű betöltés
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Implementáció}{Futtatás és eredmény reportálás}
+        \begin{itemize}
+            \item Lehetőség lokális futtatásra
+            \item Eredmény tárolás \textit{SQLite} adatbázisban
+            \item Elosztott futtatás
+                  \begin{itemize}
+                      \item Kommunikáció \textit{WebSocketen} át
+                      \item Saját állapotalapú protokoll
+                      \item Feladat felosztási heurisztika a kliensek képességei alapján
+                  \end{itemize}
+            \item Eredmény jelentés készítés \textit{(HTML, JUnit XML)}
+        \end{itemize}
+    \end{frame}
+
+\section{Eredmények}
+
+    \begin{frame}{Eredmények}
+        \begin{itemize}
+            \item Teszt futásidő csökkenés: \~{}2 nap -> \~{}9 óra
+            \item Könnyen bővíthető rendszer
+            \item Modern technológiai alapok -> könnyeb fenntarthatóság
+            \item Robusztus működés
+        \end{itemize}
+    \end{frame}
+
+\section{Licenc}
+    \begingroup
+    \setbeamertemplate{footline}{}
+    \begin{frame}{Licenc}
+        \centering
+        Ezek a fóliák a
+        \textbf{Creative Commons Nevezd meg! --- Ne add el! --- Így add tovább! 4.0 Nemzetközi Licenc (CC-BY-NC-SA)}
+        védelme alatt állnak.\protect{\\}
+        \url{https://creativecommons.org/licenses/by-nc-sa/4.0/}\protect{\\}
+        \vspace{\fill}
+        {\huge\ccbyncsa{}}
+    \end{frame}
+    \endgroup
+
+\end{document}

@@ -17,31 +17,50 @@
     "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/dist",
     "latex-workshop.latex.autoBuild.run": "never",
     "latex-workshop.latex.autoClean.run": "never",
-    "latex-workshop.latex.recipe.default": "Build with latexmk",
+    "latex-workshop.latex.recipe.default": "Build thesis",
     "latex-workshop.latex.recipes": [
         {
-            "name": "Build with latexmk",
+            "name": "Build thesis",
             "tools": [
-                "latexmk"
+                "latexmk-thesis"
             ]
         },
+        {
+            "name": "Build slides",
+            "tools": [
+                "latexmk-slides"
+            ]
+        }
     ],
     "latex-workshop.latex.tools": [
         {
-            "name": "latexmk",
+            "name": "latexmk-thesis",
             "command": "latexmk",
             "args": [
                 "-r",
                 "%WORKSPACE_FOLDER%/.latexmkrc",
                 "-synctex=1",
                 "-file-line-error",
-                "%DOC%"
-            ],
-            "env": {}
+                "-jobname=Szucs_Daniel_BSY9BQ_MSc_Thesis",
+                "%WORKSPACE_FOLDER%/src/thesis.tex"
+            ]
         },
+        {
+            "name": "latexmk-slides",
+            "command": "latexmk",
+            "args": [
+                "-r",
+                "%WORKSPACE_FOLDER%/.latexmkrc",
+                "-synctex=1",
+                "-file-line-error",
+                "-jobname=Szucs_Daniel_BSY9BQ_MSc_Thesis_Slides",
+                "%WORKSPACE_FOLDER%/src/slides.tex"
+            ]
+        }
     ],
     "latex-workshop.latex.search.rootFiles.include": [
-        "**/thesis.tex"
+        "**/thesis.tex",
+        "**/slides.tex"
     ],
     "latex-workshop.linting.chktex.enabled": true,
     "latex-workshop.view.pdf.viewer": "browser"

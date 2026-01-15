@@ -27,4 +27,7 @@ docker run --rm \
     -v "$WORK_DIR:$MOUNT_POINT" \
     -w "$MOUNT_POINT" \
     -u "$DOCKER_USERNAME" \
-    ghcr.io/quasar6x/thesis-builder:latest latexmk
+    ghcr.io/quasar6x/thesis-builder:latest \
+    /bin/bash -c "\
+    latexmk -jobname=Szucs_Daniel_BSY9BQ_MSc_Thesis src/thesis.tex; \
+    latexmk -jobname=Szucs_Daniel_BSY9BQ_MSc_Thesis_Slides src/slides.tex"
